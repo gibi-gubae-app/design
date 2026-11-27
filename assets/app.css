@@ -260,3 +260,6 @@ textarea.input{height:auto;min-height:72px;padding:10px 12px;resize:none;line-he
 .att-cell .numfield{gap:3px}
 .att-cell .numfield button{width:27px;flex-shrink:0}
 .att-cell .numfield input{min-width:3.6ch;padding:0 2px}
+
+/* Hosting badge (Netlify free plan): keep it visible, but above our bottom bar and buttons */
+#nl-badge-frame{bottom:92px!important}
