@@ -40,7 +40,7 @@ F.repeater({
     ${F.teacher('መምህር', d.tType, d.tName ?? '')}
     ${F.more(F.problems(d.p ?? '', d.s ?? '') + F.area('ተጨማሪ መረጃ', d.note ?? '', 'ተጨማሪ መረጃ ካለ ይጻፉ…'), 'ችግር፣ መፍትሄ እና ተጨማሪ')}`,
   summary: c => `${F.multiOf(c, '.f-lessons').join('፣ ') || 'ትምህርት አልተመረጠም'} · ${F.picked(c, '.f-days')} · ${F.total(c)} ተማሪዎች`,
-  items: [{ lessons: ['ግዕዝ ቋንቋ', 'ቅዳሴ'], days: '3 ቀን', hours: 2, tType: 'የደብሩ', tName: 'መሪጌታ ገብረ ሥላሴ', m: 10, f: 8 }],
+  items: new URLSearchParams(location.search).has('empty') ? [{}] : [{ lessons: ['ግዕዝ ቋንቋ', 'ቅዳሴ'], days: '3 ቀን', hours: 2, tType: 'የደብሩ', tName: 'መሪጌታ ገብረ ሥላሴ', m: 10, f: 8 }],
 });
 </script>
 <script src="assets/section.js"></script>

@@ -6,6 +6,21 @@
   const q = new URLSearchParams(location.search);
   const offline = q.get('offline') === '1' || !navigator.onLine;
   window.GG_OFFLINE = offline;
+  const returned = q.get('r') === '1' || q.get('state') === 'returned';
+  const page = location.pathname.split('/').pop();
+
+  // sections opened from the returned report go back to it, not to the current week
+  if (returned && page.startsWith('section-')) {
+    document.querySelectorAll('a[href="weekly-report.html"]').forEach(a => a.href = 'weekly-report.html?state=returned');
+    document.querySelectorAll('[onclick*="weekly-report.html"]').forEach(b => b.setAttribute('onclick', "location.href='weekly-report.html?state=returned'"));
+  }
+
+  // text boxes grow with what is typed
+  const grow = t => { t.style.height = 'auto'; t.style.height = t.scrollHeight + 2 + 'px'; };
+  document.addEventListener('input', e => { if (e.target.tagName === 'TEXTAREA') grow(e.target); });
+  const growAll = () => document.querySelectorAll('textarea').forEach(t => t.offsetParent && grow(t));
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(growAll);
+  document.addEventListener('click', () => setTimeout(growAll, 30));
 
   document.querySelectorAll('.pill.saved').forEach(p => {
     p.innerHTML = offline
@@ -26,18 +41,19 @@
 
   const label = document.body.dataset.none;
   if (!label) return;
-  const key = 'gg-none-' + location.pathname.split('/').pop();
+  const key = (returned ? 'gg-none-r-' : 'gg-none-') + page;   // separate per report week
   const stored = localStorage.getItem(key);
   let on = stored === null ? q.get('none') === '1' : stored === '1';
   const note = document.querySelector('.section-note');
   const row = document.createElement('section');
   row.className = 'card none-row';
-  row.innerHTML = `<span class="ic"><span class="ms">event_busy</span></span>
+  const icon = document.body.dataset.noneIcon || 'event_busy';
+  row.innerHTML = `<span class="ic"><span class="ms">${icon}</span></span>
     <div class="min-w-0 flex-1"><b>${label}</b><small>ክፍሉ እንደተሞላ ይቆጠራል</small></div>
     <button type="button" class="switch" aria-label="${label}"></button>`;
   const empty = document.createElement('div');
   empty.className = 'card none-note';
-  empty.innerHTML = `<span class="ms">event_busy</span><b style="color:var(--text)">${label}</b>ይህ ክፍል በሪፖርቱ ላይ «አልነበረም» ተብሎ ይላካል።`;
+  empty.innerHTML = `<span class="ms">${icon}</span><b style="color:var(--text)">${label}</b>ይህ ክፍል በሪፖርቱ ላይ «አልነበረም» ተብሎ ይላካል።`;
   note.after(row); row.after(empty);
   const rest = [...row.parentElement.children].filter(el => el !== note && el !== row && el !== empty);
   const apply = () => {

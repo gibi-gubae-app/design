@@ -56,13 +56,15 @@ const screens = [
   ['section-extra.html', '12 · ተጨማሪ ተግባራት', 'Section: additional activities (optional)'],
   ['review.html', '13 · ገምግም እና ላክ', 'Review & submit'],
   ['review.html?offline=1', '13b · ያለ ኢንተርኔት', 'Review – offline, saved on phone'],
+  ['review.html?state=returned', '13c · እንደገና ላክ', 'Review – resend the fixed report'],
   ['submitted.html', '14 · ተልኳል', 'Success screen'],
   ['submitted.html?state=resent', '14b · እንደገና ተልኳል', 'Success – resent after fixing'],
-  ['report-detail.html?state=returned', '17 · የሪፖርት ዝርዝር', 'Report detail – returned, with comment'],
-  ['report-detail.html?state=review', '17b · በግምገማ ላይ', 'Report detail – under review'],
-  ['report-detail.html', '17c · ጸድቋል', 'Report detail – approved (sent late)'],
   ['notifications.html', '15 · ማሳወቂያ', 'Notifications'],
   ['profile.html', '16 · መገለጫ', 'Profile'],
+  ['report-detail.html?state=returned', '17 · የሪፖርት ዝርዝር', 'Report detail – returned, with comment'],
+  ['report-detail.html?state=review', '17b · በግምገማ ላይ', 'Report detail – under review'],
+  ['report-detail.html?state=resent', '17c · እንደገና ተልኳል', 'Report detail – resent'],
+  ['report-detail.html', '17d · ጸድቋል', 'Report detail – approved (sent late)'],
 ];
 document.getElementById('grid').innerHTML = screens.map(([src, am, en]) =>
   `<div class="screen"><div class="phone"><iframe src="${src}" loading="lazy"></iframe></div>

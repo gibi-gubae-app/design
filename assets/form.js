@@ -7,7 +7,9 @@ const F = (() => {
   const WD = ['ቅዳ','እሑ','ሰኞ','ማክ','ረቡ','ሐሙ','ዓር'];   // week starts on Saturday, like the report week
   // Ethiopian year 2019 starts on a Friday (መስከረም 1 = 11 Sep 2026). Weekday index 0 = Monday.
   const YEAR = 2019, FIRST_WD = 4;
-  const WEEK = { m: 3, from: 12, to: 18 }; // reporting week: ኅዳር 12–18
+  // reporting week: ኅዳር 12–18, or ኅዳር 5–11 while fixing the returned report (set by weekly-report.html)
+  const RETURNED = new URLSearchParams(location.search).get('r') === '1';   // section opened from the returned report
+  const WEEK = RETURNED ? { m: 3, from: 5, to: 11 } : { m: 3, from: 12, to: 18 };
   const wdOf = (m, d) => (FIRST_WD + (m - 1) * 30 + (d - 1)) % 7;
   const inWeek = (m, d) => m === WEEK.m && d >= WEEK.from && d <= WEEK.to;
 
@@ -138,8 +140,10 @@ const F = (() => {
   /* ---------- field builders (return HTML) ---------- */
   const lab = (label, hint) => `<span class="label">${label}${hint ? ` <span style="color:var(--muted)">${hint}</span>` : ''}</span>`;
 
-  const date = (label, value = '') => `<div class="field f-date">${lab(label)}
-    <span class="input date-btn" role="button"><input value="${value}" placeholder="ቀን ይምረጡ" readonly><span class="cal" aria-hidden="true"><span class="ms">calendar_month</span></span></span></div>`;
+  // demo dates are written for the current week; move them one week back for the returned report
+  const shift = v => RETURNED ? v.replace(/^ኅዳር (\d+)/, (m, d) => `ኅዳር ${+d >= 12 && +d <= 18 ? d - 7 : d}`) : v;
+  const date = (label, value = '') => (value = shift(value), `<div class="field f-date">${lab(label)}
+    <span class="input date-btn" role="button"><input value="${value}" placeholder="ቀን ይምረጡ" readonly><span class="cal" aria-hidden="true"><span class="ms">calendar_month</span></span></span></div>`);
 
   // chips; "ሌላ" opens a text box (pass other=false to hide it)
   const choice = (label, options, value, otherPh = 'ይጻፉ…', cls = '', other = true) => {
@@ -209,7 +213,7 @@ const F = (() => {
     ${lab('የተወሰደ መፍትሄ')}<textarea class="input" style="min-height:60px" placeholder="የተወሰደውን መፍትሄ ይጻፉ…">${s}</textarea></div>`;
 
   // a growing list of one or two text inputs per row (mezmur titles, mezmur + singer, agenda …)
-  const rowHtml = (phs, vals = []) => `<div class="mini-row" style="grid-template-columns:${phs.map(() => '1fr').join(' ')} 34px">${phs.map((p, i) => `<span class="input"><input placeholder="${p}" value="${vals[i] ?? ''}"></span>`).join('')}<button type="button" class="rm" aria-label="አስወግድ"><span class="ms" style="font-size:19px">close</span></button></div>`;
+  const rowHtml = (phs, vals = []) => `<div class="mini-row" style="grid-template-columns:${phs.map(() => 'minmax(0,1fr)').join(' ')} 36px">${phs.map((p, i) => `<span class="input"><input placeholder="${p}" value="${vals[i] ?? ''}"></span>`).join('')}<button type="button" class="rm" aria-label="አስወግድ"><span class="ms" style="font-size:19px">close</span></button></div>`;
   const list = (title, hint, phs, items = [], addLabel = 'ጨምር') => `<div class="field f-list" data-ph='${JSON.stringify(phs)}'>
     <div class="subhead"><span>${title}</span><small>${hint}</small></div>
     <div class="rows flex flex-col gap-2">${items.map(v => rowHtml(phs, v)).join('')}</div>
@@ -306,6 +310,6 @@ const F = (() => {
   const absent = card => { const b = card.querySelector('[data-present] .on'); return b && b.dataset.v === '0'; };
   const total = card => card.querySelector('.a-t') ? card.querySelector('.a-t').textContent : '0';
 
-  return { date, times, choice, chipsMulti, chipsOf, batch, multi, year, assignedTeacher, teacher, text, area, hours, attendance, problems, list, mezmurList, more,
+  return { RETURNED, date, times, choice, chipsMulti, chipsOf, batch, multi, year, assignedTeacher, teacher, text, area, hours, attendance, problems, list, mezmurList, more,
            repeater, monthPicker, val, picked, multiOf, teacherOf, absent, total, MONTHS };
 })();

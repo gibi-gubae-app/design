@@ -54,7 +54,7 @@
 
   <div class="layer fade pb-8 flex flex-col gap-2.5">
     <a href="home.html" class="btn btn-primary no-underline">ወደ ዋና ገጽ</a>
-    <a href="reports.html" class="btn no-underline" style="background:transparent;color:var(--primary);height:44px">ሪፖርቱን ይመልከቱ</a>
+    <a href="report-detail.html?state=review" id="view" class="btn no-underline" style="background:transparent;color:var(--primary);height:44px">ሪፖርቱን ይመልከቱ</a>
   </div>
 </main>
 <script>
@@ -62,6 +62,7 @@ if (new URLSearchParams(location.search).get('state') === 'resent') {
   document.getElementById('h').textContent = 'ሪፖርቱ እንደገና ተልኳል!';
   document.getElementById('p').textContent = 'የተስተካከለው የኅዳር 5 – 11 ሪፖርትዎ ለኃላፊው ደርሷል። ስለ ፈጣን ማስተካከያዎ እናመሰግናለን።';
   document.getElementById('pill').textContent = 'እንደገና ተልኳል';
+  document.getElementById('view').href = 'report-detail.html?state=resent';
 }
 </script>
 </body>

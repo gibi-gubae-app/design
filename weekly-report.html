@@ -49,11 +49,12 @@
 <script>
 const st = new URLSearchParams(location.search).get('state');
 const complete = st === 'complete', returned = st === 'returned';
+const NK = returned ? 'gg-none-r-' : 'gg-none-';
 // [icon, title, summary, state (1 filled · 0 empty · 'none' nothing this week), page, optional]
 const S = [
   ['calendar_month','መርሐ ግብር እና ተሳትፎ','2 መርሐ ግብሮች · 86 ተሳታፊ',1,'section-program.html'],
   ['menu_book','ተከታታይ ኮርሶች','1 ኮርስ · 32 ተሳታፊ',1,'section-courses.html'],
-  ['translate','በሌሎች ቋንቋዎች ኮርሶች','',  'none','section-languages.html'],
+  ['translate','በሌሎች ቋንቋዎች ኮርሶች','1 ኮርስ · 24 ተሳታፊ','none','section-languages.html'],
   ['school','ሳምንታዊ ስልጠና','1 ስልጠና · 42 ተሳታፊ',1,'section-training.html'],
   ['history_edu','አብነት እና ግዕዝ','1 የትምህርት ቡድን · 18 ተማሪዎች',0,'section-abinet.html'],
   ['music_note','የመዝሙር ጥናት','1 ጥናት · 3 መዝሙራት',1,'section-mezmur.html'],
@@ -62,7 +63,7 @@ const S = [
   ['add_circle','ተጨማሪ ተግባራት','1 ተግባር · አማራጭ',0,'section-extra.html',true],
 ];
 // the "nothing this week" switch on a section page wins over the demo data
-S.forEach(x => { const v = localStorage.getItem('gg-none-' + x[4]); if (v === '1') x[3] = 'none'; else if (v === '0' && x[3] === 'none') x[3] = 1; });
+S.forEach(x => { const v = localStorage.getItem(NK + x[4]); if (v === '1') x[3] = 'none'; else if (v === '0' && x[3] === 'none') x[3] = 1; });
 
 document.getElementById('title').textContent = returned ? 'ሪፖርቱን አስተካክል' : 'የሳምንቱ ሪፖርት';
 document.getElementById('week').innerHTML = returned ? 'ኅዳር 5 – 11, 2019 ዓ.ም · ኅዳር 2ኛ ሳምንት' : 'ኅዳር 12 – 18, 2019 ዓ.ም · ኅዳር 3ኛ ሳምንት';
@@ -80,7 +81,9 @@ const rows = S.map(([ic,t,sub,state,href,optional], i) => {
     ? '<span class="pill warn">አስተካክል</span>'
     : done ? `<span class="done-mark"${none ? ' style="background:#EEF1F5;color:#8A94A3"' : ''}><span class="ms">${none ? 'remove' : 'check'}</span></span>`
     : '<span class="ms text-[#8A94A3]" style="font-size:22px">chevron_right</span>';
-  const link = href + (state === 'none' && !localStorage.getItem('gg-none-' + href) ? '?none=1' : '');
+  // demo: open empty sections as blank forms, and 'none' sections with the switch on
+  const params = [returned && 'r=1', state === 'none' && !localStorage.getItem(NK + href) && 'none=1', state === 0 && !optional && 'empty=1'].filter(Boolean);
+  const link = href + (params.length ? '?' + params.join('&') : '');
   return `<a href="${link}" class="flex items-center justify-between gap-3 px-4 min-h-[72px] no-underline text-inherit"${flag ? ' style="background:#FFFBF3"' : ''}>
     <span class="flex items-center gap-3.5 min-w-0"><span class="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style="background:${flag ? 'var(--warn-bg)' : 'var(--primary-tint)'};color:${flag ? '#B26A00' : 'var(--primary)'}"><span class="ms" style="font-size:20px">${ic}</span></span>
     <span class="flex flex-col min-w-0"><span class="font-semibold text-[15px] truncate">${t}</span><span class="text-[13px] truncate" style="color:${subCol}">${subText}</span></span></span>${right}</a>`;

@@ -8,7 +8,7 @@
 <script src="assets/prefs.js"></script>
 <script src="assets/form.js"></script>
 </head>
-<body data-none="ምንም ችግር አላጋጠመም">
+<body data-none="ምንም ችግር አላጋጠመም" data-none-icon="sentiment_satisfied">
 <header class="appbar"><div class="row">
   <a href="weekly-report.html" class="icon-btn -ml-2 text-inherit" aria-label="ተመለስ"><span class="ms">arrow_back</span></a>
   <h1>ችግሮች እና መፍትሄዎች</h1>
@@ -31,7 +31,7 @@ F.repeater({
   list: document.getElementById('list'), addBtn: document.getElementById('add'), title: 'ችግር',
   body: d => `${F.area('ያጋጠመ ችግር', d.p ?? '', 'ችግሩን ይግለጹ…')}${F.area('የተወሰደ መፍትሄ', d.s ?? '', 'የተወሰደውን መፍትሄ ይጻፉ…')}`,
   summary: c => (c.querySelector('textarea') || {}).value || 'ችግሩን ይግለጹ',
-  items: [{ p: 'ከሥራ አስፈጻሚዎች በጊዜ መረጃ አይሰጡኝም፤ ቁጥራቸውም አልተሟላም', s: 'ለሁሉም ሥራ አስፈጻሚ በመደወል ማወያየት፤ ሌሎች ጠንካራ ልጆችን በማነጋገር መረጃ መለዋወጥ' }],
+  items: new URLSearchParams(location.search).has('empty') ? [{}] : [{ p: 'ከሥራ አስፈጻሚዎች በጊዜ መረጃ አይሰጡኝም፤ ቁጥራቸውም አልተሟላም', s: 'ለሁሉም ሥራ አስፈጻሚ በመደወል ማወያየት፤ ሌሎች ጠንካራ ልጆችን በማነጋገር መረጃ መለዋወጥ' }],
 });
 </script>
 <script src="assets/section.js"></script>

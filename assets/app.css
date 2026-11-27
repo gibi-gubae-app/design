@@ -254,3 +254,9 @@ textarea.input{height:auto;min-height:72px;padding:10px 12px;resize:none;line-he
 .none-note .ms{font-size:34px;color:#B7C2D3}
 /* field labels inside agenda items */
 .mini-lb{font-size:12px;font-weight:600;color:var(--text-2);margin:0 2px -2px}
+
+/* attendance on small phones / large text: keep 3-digit numbers readable */
+.att-cell{padding:8px 6px}
+.att-cell .numfield{gap:3px}
+.att-cell .numfield button{width:27px;flex-shrink:0}
+.att-cell .numfield input{min-width:3.6ch;padding:0 2px}

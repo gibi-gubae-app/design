@@ -50,8 +50,13 @@
         <div class="w-px bg-[#E3E8EF]"></div>
         <div class="stat"><b>86</b><span>የመርሐ ግብር ተሳታፊ</span></div>
         <div class="w-px bg-[#E3E8EF]"></div>
-        <div class="stat"><b>3</b><span>ኮርስ እና ስልጠና</span></div>
+        <div class="stat"><b>3</b><span>ትምህርት እና ስልጠና</span></div>
       </div>
+    </section>
+
+    <section id="comment" class="hidden rounded-[16px] p-4" style="background:#FFF8EC;border:1px solid var(--warn-line);color:#8A5200">
+      <div class="flex items-center gap-2 font-semibold text-[14px]"><span class="ms" style="font-size:20px">chat</span>የኃላፊ አስተያየት</div>
+      <p class="m-0 mt-1.5 text-[13.5px] leading-relaxed" style="color:#6B4300">በመርሐ ግብር 2 ላይ የተሳታፊ ቁጥር በወንድ እና ሴት ተለይቶ አልተጻፈም፤ እባክዎ ይለዩ። መምህሩ ያልተገኙበትን ምክንያት ይጻፉ።</p>
     </section>
 
     <p class="section-note"><span class="ms" style="font-size:16px">fact_check</span>ከመላክዎ በፊት እያንዳንዱን ክፍል ይመልከቱ።</p>
@@ -85,13 +90,24 @@ const R = [
   ['help', 'ችግሮች እና መፍትሄዎች', 'section-problems.html', '1 ችግር ከመፍትሄ ጋር'],
   ['add_circle', 'ተጨማሪ ተግባራት', 'section-extra.html', 'የሕሙማን ጉብኝት · 15 ተሳታፊ'],
 ];
+const returned = new URLSearchParams(location.search).get('state') === 'returned';
+if (returned) {   // the returned week (ኅዳር 5–11) has its own data; the fixed part is shown with ✓
+  R[0][3] = 'መደበኛ፡ ምሥጢረ ሥላሴ · 46 ተሳታፊ<br>የአንድነት፡ የቅዱስ ያሬድ ዜማ · ወ 18 · ሴ 22 · <span style="color:var(--primary)">✓ ተስተካክሏል፤ ምክንያት፡ ለአገልግሎት ከከተማ ውጪ ሄደዋል</span>';
+  R[6][3] = 'ስብሰባ ኅዳር 8 · 5 ተሳታፊ · 3 አጀንዳዎች ከውሳኔ ጋር';
+}
+// the "nothing this week" switches decide what each section shows
+const NK = returned ? 'gg-none-r-' : 'gg-none-';
+const LANG = 'አፋን ኦሮሞ፡ Barnoota Amantaa · 24 ተሳታፊ';
+R.forEach(r => { const v = localStorage.getItem(NK + r[2]);
+  if (v === '1') r[3] = '<span style="color:var(--muted)">በዚህ ሳምንት አልነበረም</span>';
+  else if (v === '0' && r[2] === 'section-languages.html') r[3] = LANG; });
 document.getElementById('rv').innerHTML = R.map(([ic, t, href, body]) => `
   <div class="rv"><span class="ic"><span class="ms">${ic}</span></span>
     <div class="min-w-0"><h4>${t}</h4><p>${body}</p></div>
-    <a class="edit" href="${href}">አስተካክል<span class="ms">chevron_right</span></a></div>`).join('<div class="divider mx-3.5"></div>');
+    <a class="edit" href="${href}${returned ? '?r=1' : ''}">አስተካክል<span class="ms">chevron_right</span></a></div>`).join('<div class="divider mx-3.5"></div>');
 
-const returned = new URLSearchParams(location.search).get('state') === 'returned';
 if (returned) {
+  document.getElementById('comment').classList.remove('hidden');
   document.getElementById('week').textContent = 'ኅዳር 5 – 11, 2019 ዓ.ም · ኅዳር 2ኛ ሳምንት';
   document.getElementById('sendT').textContent = 'እንደገና ላክ';
   document.querySelector('.appbar a').href = 'weekly-report.html?state=returned';
