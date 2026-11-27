@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="am">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>አጀንዳ እና ውሳኔዎች · Agenda & decisions</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/prefs.js"></script>
+<script src="assets/form.js"></script>
+</head>
+<body data-none="በዚህ ሳምንት ስብሰባ አልነበረም">
+<header class="appbar"><div class="row">
+  <a href="weekly-report.html" class="icon-btn -ml-2 text-inherit" aria-label="ተመለስ"><span class="ms">arrow_back</span></a>
+  <h1>አጀንዳ እና ውሳኔዎች</h1>
+  <span class="pill saved"><span class="ms" style="font-size:14px">cloud_done</span>ተቀምጧል</span>
+</div></header>
+
+<main class="relative overflow-hidden px-4 pt-[64px] pb-32">
+  <div class="glow" style="height:300px"></div>
+  <div class="layer flex flex-col gap-3.5">
+    <p class="section-note"><span class="ms" style="font-size:16px">info</span>የሳምንቱ ስብሰባ መረጃ እና የተወሰኑ ውሳኔዎች።</p>
+    <div id="list" class="flex flex-col gap-3.5"></div>
+    
+  </div>
+</main>
+
+<div class="actionbar"><button class="btn btn-primary" type="button" onclick="location.href='weekly-report.html'"><span class="ms" style="font-size:20px">check</span>ጨርሻለሁ</button></div>
+
+<script>
+document.getElementById('list').innerHTML = `
+  <section class="card p-3.5 flex flex-col gap-3">
+    <div class="subhead"><span class="flex items-center gap-1.5"><span class="ms" style="font-size:19px;color:var(--primary)">event</span>የስብሰባው መረጃ</span></div>
+    ${F.date('ቀን', 'ኅዳር 15, 2019')}
+    ${F.times([['የተጀመረበት', '11:00 ከቀኑ'], ['ያለቀበት', '12:30 ማታ']])}
+    ${F.text('ቦታ', 'ቅዱስ ሩፋኤል ቤ/ክ', 'የስብሰባው ቦታ', '', 'location_on')}
+    ${F.attendance(4, 1)}
+    <div class="field">${'<span class="label">አስተባባሪው</span>'}
+      <div class="seg"><button type="button" data-v="1" class="on" onclick="this.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===this))"><span class="ms">how_to_reg</span>ተገኝተዋል</button><button type="button" data-v="0" onclick="this.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===this))"><span class="ms">person_off</span>አልተገኙም</button></div></div>
+  </section>
+  <section class="card p-3.5 flex flex-col gap-3" id="agendaCard">
+    <div class="subhead"><span class="flex items-center gap-1.5"><span class="ms" style="font-size:19px;color:var(--primary)">gavel</span>አጀንዳ እና ውሳኔ</span><small>እያንዳንዱ አጀንዳ ከውሳኔው ጋር</small></div>
+    <div id="items" class="flex flex-col gap-2.5"></div>
+    <button type="button" class="link-add" id="addItem"><span class="ms" style="font-size:19px">add_circle</span>አጀንዳ ጨምር</button>
+  </section>`;
+const item = (n, a = '', d = '') => `<div class="att" style="gap:8px"><div class="flex items-center justify-between"><span class="num" style="width:26px;height:26px;font-size:12.5px">${n}</span>
+   <button type="button" class="rm" onclick="this.closest('.att').remove()"><span class="ms" style="font-size:18px">close</span></button></div>
+   <span class="mini-lb">አጀንዳ</span><textarea class="input" style="min-height:52px" placeholder="የእለቱ አጀንዳ…">${a}</textarea>
+   <span class="mini-lb">ውሳኔ</span><textarea class="input" style="min-height:52px" placeholder="የተወሰነው ውሳኔ…">${d}</textarea></div>`;
+const items = document.getElementById('items');
+[['ከማስተባበሪያ ስለታዘዝነው መረጃ', 'የተጠየቀውን መረጃ እየሰበሰቡ ነው፤ ለቀጣይ ሐሙስ እንደሚያስገቡ ተነጋግረናል'],
+ ['ልዩ መርሐ ግብር ልደትን አስመልክቶ ስለማዘጋጀት', 'የፊታችን ሐሙስ ልዩ መርሐ ግብር ለማዘጋጀት ታስቧል፤ መምህር ተመድቧል'],
+ ['ስለ ኮርስ አሰጣጥ', 'ኮርስ ተጀምሯል፤ ሁሉም ባች አንድ ጊዜ ወስዷል']].forEach((x, i) => items.insertAdjacentHTML('beforeend', item(i + 1, ...x)));
+document.getElementById('addItem').onclick = () => { items.insertAdjacentHTML('beforeend', item(items.children.length + 1)); items.lastElementChild.querySelector('textarea').focus(); };
+</script>
+<script src="assets/section.js"></script>
+</body>
+</html>

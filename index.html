@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="am">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gibi Gubae – Design overview</title>
+<link rel="stylesheet" href="assets/app.css">
+<style>
+body{background:#E9EDF3;padding:32px 28px 60px}
+h1{margin:0 0 4px;font-size:22px} .lead{margin:0 0 28px;color:var(--text-2);font-size:14px}
+.grid{display:flex;flex-wrap:wrap;gap:36px 28px}
+.screen{display:flex;flex-direction:column;gap:10px;align-items:center}
+.phone{width:390px;height:844px;border-radius:44px;background:#0E1626;padding:10px;box-shadow:0 20px 50px rgba(14,22,38,.25)}
+.phone iframe{width:100%;height:100%;border:0;border-radius:36px;background:var(--bg)}
+.cap{font-size:14px;font-weight:600} .cap small{display:block;text-align:center;font-weight:400;color:var(--text-2);font-size:12px}
+.cap a{color:var(--primary);text-decoration:none}
+.tokens{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 28px}
+.sw{display:flex;align-items:center;gap:8px;background:#fff;border-radius:12px;padding:6px 12px 6px 6px;font-size:12px;border:1px solid var(--border)}
+.sw i{width:26px;height:26px;border-radius:8px;display:block}
+</style>
+</head>
+<body>
+<h1>ግቢ ጉባኤ · Mobile app design</h1>
+<p class="lead">Every screen in its live state. Tap around inside the phones, and refresh this page after each change.</p>
+<div class="tokens">
+  <span class="sw"><i style="background:#1D3A6B"></i>Primary #1D3A6B</span>
+  <span class="sw"><i style="background:#C9962B"></i>Gold accent #C9962B</span>
+  <span class="sw"><i style="background:#2F6FB5"></i>Blue #2F6FB5</span>
+  <span class="sw"><i style="background:#F6F8FB;border:1px solid #E3E8EF"></i>Background #F6F8FB</span>
+  <span class="sw"><i style="background:#E6F4EC"></i>Approved</span><span class="sw"><i style="background:#E8F0FA"></i>Submitted</span>
+  <span class="sw"><i style="background:#FFF4E0"></i>Returned</span><span class="sw"><i style="background:#EEF1F5"></i>Draft</span>
+</div>
+<div class="grid" id="grid"></div>
+<script>
+const screens = [
+  ['onboarding.html', '0a · እንኳን በደህና መጡ', 'Onboarding 1 – welcome'],
+  ['onboarding.html?step=1', '0b · ቋንቋ', 'Onboarding 2 – language'],
+  ['onboarding.html?step=2', '0c · ማሳወቂያ ያብሩ', 'Onboarding 3 – notifications'],
+  ['login.html', '0d · ግባ', 'Login'],
+  ['login.html?state=forgot', '0e · የይለፍ ቃል ረሱ', 'Forgot password'],
+  ['login.html?state=first', '0f · አዲስ የይለፍ ቃል', 'First login: set password'],
+  ['home.html', '1 · ዋና ገጽ', 'Home'],
+  ['reports.html', '2 · ሪፖርቶች', 'Reports – report in progress'],
+  ['reports.html?state=new', '2b · ሪፖርቶች', 'Reports – new week, not started'],
+  ['weekly-report.html', '3 · የሳምንቱ ሪፖርት', 'Weekly report – in progress'],
+  ['weekly-report.html?state=complete', '3b · የሳምንቱ ሪፖርት', 'Weekly report – all filled'],
+  ['weekly-report.html?state=returned', '3c · ሪፖርቱን አስተካክል', 'Returned report – fix and resend'],
+  ['section-program.html', '4 · መርሐ ግብር እና ተሳትፎ', 'Section: program & attendance'],
+  ['section-courses.html', '5 · ተከታታይ ኮርሶች', 'Section: continuous courses'],
+  ['section-languages.html', '6 · በሌሎች ቋንቋዎች ኮርሶች', 'Section: courses in other languages'],
+  ['section-languages.html?none=1', '6b · አልነበረም', 'Section switched to “nothing this week”'],
+  ['section-training.html', '7 · ሳምንታዊ ስልጠና', 'Section: weekly training'],
+  ['section-abinet.html', '8 · አብነት እና ግዕዝ', "Section: Abinet & Ge'ez"],
+  ['section-mezmur.html', '9 · የመዝሙር ጥናት', 'Section: hymn study'],
+  ['section-agenda.html', '10 · አጀንዳ እና ውሳኔዎች', 'Section: meeting, agenda & decisions'],
+  ['section-problems.html', '11 · ችግሮች እና መፍትሄዎች', 'Section: challenges & solutions'],
+  ['section-extra.html', '12 · ተጨማሪ ተግባራት', 'Section: additional activities (optional)'],
+  ['review.html', '13 · ገምግም እና ላክ', 'Review & submit'],
+  ['review.html?offline=1', '13b · ያለ ኢንተርኔት', 'Review – offline, saved on phone'],
+  ['submitted.html', '14 · ተልኳል', 'Success screen'],
+  ['submitted.html?state=resent', '14b · እንደገና ተልኳል', 'Success – resent after fixing'],
+  ['report-detail.html?state=returned', '17 · የሪፖርት ዝርዝር', 'Report detail – returned, with comment'],
+  ['report-detail.html?state=review', '17b · በግምገማ ላይ', 'Report detail – under review'],
+  ['report-detail.html', '17c · ጸድቋል', 'Report detail – approved (sent late)'],
+  ['notifications.html', '15 · ማሳወቂያ', 'Notifications'],
+  ['profile.html', '16 · መገለጫ', 'Profile'],
+];
+document.getElementById('grid').innerHTML = screens.map(([src, am, en]) =>
+  `<div class="screen"><div class="phone"><iframe src="${src}" loading="lazy"></iframe></div>
+   <div class="cap"><a href="${src}" target="_blank">${am}</a><small>${en}</small></div></div>`).join('');
+</script>
+</body>
+</html>

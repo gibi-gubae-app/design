@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="am">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ሪፖርቶች · Reports</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/prefs.js"></script>
+<script src="assets/form.js"></script>
+<style>
+.chip{flex-shrink:0;height:36px;padding:0 14px;border-radius:99px;font-size:13px;font-weight:500;background:#fff;border:1px solid var(--border);color:var(--text-2);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip b{font-weight:600;font-size:12px;min-width:20px;height:20px;padding:0 6px;border-radius:99px;background:var(--primary-tint);color:var(--primary);display:inline-flex;align-items:center;justify-content:center}
+.chip.on{color:#fff;border-color:transparent;background:linear-gradient(180deg,var(--primary-2),var(--primary));box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 4px 10px rgba(29,58,107,.2)}
+.chip.on b{background:rgba(255,255,255,.2);color:#fff}
+.plus{width:48px;height:48px;border-radius:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;
+  background:linear-gradient(180deg,#3A63A6,var(--primary));box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 6px 14px rgba(29,58,107,.25);position:relative}
+.plus::after{content:'';position:absolute;inset:-4px;border-radius:19px;border:1.5px solid rgba(201,150,43,.55)}
+</style>
+</head>
+<!-- ?state=new  → this week's report not started yet (shows "start" call to action) -->
+<body>
+<header class="appbar"><div class="h-16 px-5 flex items-center justify-between">
+  <h1 class="m-0 text-[22px] font-bold">ሪፖርቶች</h1>
+  <button id="calBtn" type="button" class="w-10 h-10 rounded-full bg-white border border-[#E3E8EF] text-[#1D3A6B] flex items-center justify-center" aria-label="ወር ምረጥ"><span class="ms" style="font-size:20px">calendar_month</span></button>
+</div></header>
+
+<main class="relative overflow-hidden px-5 pt-[68px] pb-32">
+  <div class="glow"></div>
+  <div class="layer flex flex-col gap-5">
+
+    <!-- Call to action: write this week's report -->
+    <section class="glass" style="padding:18px" id="cta"></section>
+
+    <!-- Filters with counts -->
+    <div>
+      <div class="flex items-center justify-between mb-3 px-1"><h3 class="m-0 text-[15px] font-semibold">ያለፉ ሪፖርቶች</h3>
+        <button id="monthTag" type="button" class="hidden pill soft" style="border:0;cursor:pointer"><span></span><span class="ms" style="font-size:15px">close</span></button></div>
+      <div class="flex gap-2 overflow-x-auto -mx-5 px-5 pb-1" id="chips">
+        <button class="chip on" data-f="all">ሁሉም</button>
+        <button class="chip" data-f="ok">ጸድቋል <b>12</b></button>
+        <button class="chip" data-f="info">በሂደት ላይ <b>2</b></button>
+        <button class="chip" data-f="warn">ተመልሷል <b>1</b></button>
+        <button class="chip" data-f="late">ዘግይቷል <b>1</b></button>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-6" id="list">
+      <section class="flex flex-col gap-3"><h4 class="m-0 text-[13px] font-semibold text-[#5B6675] px-1">ኅዳር 2019</h4>
+        <a href="report-detail.html?state=returned" class="card block p-4 no-underline text-inherit" data-s="warn">
+          <div class="flex items-start justify-between gap-3"><div class="min-w-0"><div class="font-semibold text-[15px]">ኅዳር 5 – 11</div>
+            <div class="text-[13px] text-[#5B6675] flex items-center gap-1 mt-1"><span class="ms" style="font-size:15px">schedule</span>ኅዳር 13 ተልኳል · ኅዳር 17 ተመልሷል</div></div>
+            <span class="flex flex-col items-end gap-1"><span class="pill warn">ተመልሷል</span></span></div>
+          <div class="mt-3 rounded-xl px-3 py-2.5 flex items-start gap-2 text-[13px]" style="background:#FFF8EC;border:1px solid var(--warn-line);color:#8A5200">
+            <span class="ms" style="font-size:18px">chat</span><span><b class="font-semibold">የኃላፊ አስተያየት፡</b> የተሳታፊ ቁጥር በወንድ እና ሴት ይለይ።</span></div>
+          <div class="mt-3 flex justify-end text-[13px] font-semibold text-[#1D3A6B] items-center">አስተካክል<span class="ms" style="font-size:18px">chevron_right</span></div>
+        </a>
+        <a href="report-detail.html?state=review" class="card block p-4 no-underline text-inherit" data-s="info">
+          <div class="flex items-start justify-between gap-3"><div class="min-w-0"><div class="font-semibold text-[15px]">ጥቅምት 28 – ኅዳር 4</div>
+            <div class="text-[13px] text-[#5B6675] flex items-center gap-1 mt-1"><span class="ms" style="font-size:15px">schedule</span>ኅዳር 6 ተልኳል · ኃላፊው እየገመገሙ ነው</div></div>
+            <span class="flex flex-col items-end gap-1"><span class="pill info">በግምገማ ላይ</span></span></div>
+        </a>
+      </section>
+      <section class="flex flex-col gap-3"><h4 class="m-0 text-[13px] font-semibold text-[#5B6675] px-1">ጥቅምት 2019</h4>
+        <a href="report-detail.html?state=resent" class="card block p-4 no-underline text-inherit" data-s="info">
+          <div class="flex items-start justify-between gap-3"><div class="min-w-0"><div class="font-semibold text-[15px]">ጥቅምት 21 – 27</div>
+            <div class="text-[13px] text-[#5B6675] flex items-center gap-1 mt-1"><span class="ms" style="font-size:15px">schedule</span>ጥቅምት 30 ተመልሷል · ኅዳር 1 እንደገና ተልኳል</div></div>
+            <span class="flex flex-col items-end gap-1"><span class="pill info">እንደገና ተልኳል</span></span></div>
+        </a>
+        <a href="report-detail.html?state=approved" class="card block p-4 no-underline text-inherit" data-s="ok" data-late="1">
+          <div class="flex items-start justify-between gap-3"><div class="min-w-0"><div class="font-semibold text-[15px]">ጥቅምት 14 – 20</div>
+            <div class="text-[13px] text-[#5B6675] flex items-center gap-1 mt-1"><span class="ms" style="font-size:15px">schedule</span>ጥቅምት 25 ተልኳል · ጥቅምት 27 ጸድቋል</div></div>
+            <span class="flex flex-col items-end gap-1"><span class="pill ok">ጸድቋል</span><span class="pill err">ዘግይቷል</span></span></div>
+        </a>
+        <a href="report-detail.html?state=approved" class="card block p-4 no-underline text-inherit" data-s="ok">
+          <div class="flex items-start justify-between gap-3"><div class="min-w-0"><div class="font-semibold text-[15px]">ጥቅምት 7 – 13</div>
+            <div class="text-[13px] text-[#5B6675] flex items-center gap-1 mt-1"><span class="ms" style="font-size:15px">schedule</span>ጥቅምት 15 ተልኳል · ጥቅምት 17 ጸድቋል</div></div>
+            <span class="flex flex-col items-end gap-1"><span class="pill ok">ጸድቋል</span></span></div>
+        </a>
+      </section>
+    </div>
+  </div>
+</main>
+
+<nav class="navwrap" data-active="1"></nav>
+<script src="assets/nav.js"></script>
+<script>
+const isNew = new URLSearchParams(location.search).get('state') === 'new';
+document.getElementById('cta').innerHTML = isNew ? `
+  <div class="flex items-center gap-4">
+    <span class="plus"><span class="ms" style="font-size:28px">add</span></span>
+    <div class="min-w-0"><div class="text-[16px] font-semibold">የዚህን ሳምንት ሪፖርት ይጀምሩ</div>
+      <div class="text-[13px] text-[#5B6675] mt-0.5">ኅዳር 12 – 18 · እስከ ሰኞ ምሽት</div></div>
+  </div>
+  <a href="weekly-report.html" class="btn btn-primary no-underline mt-4"><span class="ms" style="font-size:20px">edit_square</span>ሪፖርት ጻፍ</a>` : `
+  <div class="flex items-center gap-4">
+    <span class="plus"><span class="ms" style="font-size:26px">edit_note</span></span>
+    <div class="min-w-0 flex-1"><div class="flex items-center justify-between gap-2"><span class="text-[16px] font-semibold">የዚህ ሳምንት ሪፖርት</span><span class="pill soft">3 ቀን ቀርቷል</span></div>
+      <div class="text-[13px] text-[#5B6675] mt-0.5">ኅዳር 12 – 18 · 5/8 ክፍሎች ተሞልተዋል</div>
+      <div class="track mt-2" style="height:6px"><i style="width:63%"></i></div></div>
+  </div>
+  <a href="weekly-report.html" class="btn btn-primary no-underline mt-4">ሪፖርቱን ቀጥል <span class="ms" style="font-size:19px">arrow_forward</span></a>`;
+
+// filters: status chip + month (from the calendar button)
+let status = 'all', month = null;
+const sections = [...document.querySelectorAll('#list section')];
+sections.forEach(s => s.dataset.month = s.querySelector('h4').textContent.trim());
+function applyFilters() {
+  sections.forEach(s => {
+    let any = false;
+    s.querySelectorAll('[data-s]').forEach(card => {
+      const show = (status === 'all' || card.dataset.s === status || (status === 'late' && card.dataset.late)) && (!month || s.dataset.month === month);
+      card.style.display = show ? '' : 'none'; any = any || show;
+    });
+    s.style.display = any ? '' : 'none';
+  });
+  const tag = document.getElementById('monthTag');
+  tag.classList.toggle('hidden', !month); tag.firstElementChild.textContent = month || '';
+}
+document.getElementById('chips').addEventListener('click', e => {
+  const c = e.target.closest('.chip'); if (!c) return;
+  document.querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x === c));
+  status = c.dataset.f; applyFilters();
+});
+document.getElementById('calBtn').onclick = e =>
+  F.monthPicker(e.currentTarget, sections.map(s => s.dataset.month), month, m => { month = m; applyFilters(); });
+document.getElementById('monthTag').onclick = () => { month = null; applyFilters(); };
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="am">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ችግሮች እና መፍትሄዎች · Challenges & solutions</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/prefs.js"></script>
+<script src="assets/form.js"></script>
+</head>
+<body data-none="ምንም ችግር አላጋጠመም">
+<header class="appbar"><div class="row">
+  <a href="weekly-report.html" class="icon-btn -ml-2 text-inherit" aria-label="ተመለስ"><span class="ms">arrow_back</span></a>
+  <h1>ችግሮች እና መፍትሄዎች</h1>
+  <span class="pill saved"><span class="ms" style="font-size:14px">cloud_done</span>ተቀምጧል</span>
+</div></header>
+
+<main class="relative overflow-hidden px-4 pt-[64px] pb-32">
+  <div class="glow" style="height:300px"></div>
+  <div class="layer flex flex-col gap-3.5">
+    <p class="section-note"><span class="ms" style="font-size:16px">info</span>በሳምንቱ ያጋጠሙ ችግሮች እና የተወሰዱ መፍትሄዎች።</p>
+    <div id="list" class="flex flex-col gap-3.5"></div>
+    <button class="btn btn-ghost" id="add" type="button" style="height:46px"><span class="ms" style="font-size:20px">add</span>ሌላ ችግር ጨምር</button>
+  </div>
+</main>
+
+<div class="actionbar"><button class="btn btn-primary" type="button" onclick="location.href='weekly-report.html'"><span class="ms" style="font-size:20px">check</span>ጨርሻለሁ</button></div>
+
+<script>
+F.repeater({
+  list: document.getElementById('list'), addBtn: document.getElementById('add'), title: 'ችግር',
+  body: d => `${F.area('ያጋጠመ ችግር', d.p ?? '', 'ችግሩን ይግለጹ…')}${F.area('የተወሰደ መፍትሄ', d.s ?? '', 'የተወሰደውን መፍትሄ ይጻፉ…')}`,
+  summary: c => (c.querySelector('textarea') || {}).value || 'ችግሩን ይግለጹ',
+  items: [{ p: 'ከሥራ አስፈጻሚዎች በጊዜ መረጃ አይሰጡኝም፤ ቁጥራቸውም አልተሟላም', s: 'ለሁሉም ሥራ አስፈጻሚ በመደወል ማወያየት፤ ሌሎች ጠንካራ ልጆችን በማነጋገር መረጃ መለዋወጥ' }],
+});
+</script>
+<script src="assets/section.js"></script>
+</body>
+</html>

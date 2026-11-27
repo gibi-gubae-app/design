@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="am">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ገምግም እና ላክ · Review & submit</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/prefs.js"></script>
+<style>
+.stat{flex:1;text-align:center;padding:4px 0}
+.stat b{display:block;font-size:20px;color:var(--primary)}
+.stat span{font-size:12px;color:var(--text-2)}
+.rv{display:flex;gap:12px;padding:14px;align-items:flex-start}
+.rv .ic{width:38px;height:38px;border-radius:50%;background:var(--primary-tint);color:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rv .ic .ms{font-size:19px}
+.rv h4{margin:0;font-size:14.5px;font-weight:600}
+.rv p{margin:3px 0 0;font-size:12.5px;color:var(--text-2);line-height:1.55}
+.rv .edit{margin-left:auto;font-size:12.5px;font-weight:600;color:var(--primary);text-decoration:none;display:flex;align-items:center;gap:2px;flex-shrink:0;padding-top:2px}
+.rv .edit .ms{font-size:16px}
+.confirm{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:#fff;border:1px solid var(--border);cursor:pointer;font-size:13.5px;line-height:1.5}
+.confirm .box{width:22px;height:22px;border-radius:7px;border:1.5px solid #C3CAD4;display:flex;align-items:center;justify-content:center;color:transparent;flex-shrink:0;margin-top:1px;transition:all .15s}
+.confirm.on .box{background:var(--primary);border-color:var(--primary);color:#fff}
+.confirm .box .ms{font-size:16px}
+</style>
+</head>
+<body>
+<header class="appbar"><div class="row">
+  <a href="weekly-report.html?state=complete" class="icon-btn -ml-2 text-inherit" aria-label="ተመለስ"><span class="ms">arrow_back</span></a>
+  <h1>ገምግም እና ላክ</h1>
+  <span class="pill saved"></span>
+</div></header>
+
+<main class="relative overflow-hidden px-4 pt-[64px] pb-36">
+  <div class="glow" style="height:360px"></div>
+  <div class="layer flex flex-col gap-3.5">
+
+    <!-- who / when / to whom -->
+    <section class="glass" style="padding:16px">
+      <div class="flex items-start justify-between gap-3">
+        <div><h2 class="m-0 text-[16px] font-semibold">አዲስ አበባ ዩኒቨርሲቲ ግቢ ጉባኤ</h2>
+          <p class="m-0 mt-0.5 text-[12.5px] text-[#5B6675]" id="week">ኅዳር 12 – 18, 2019 ዓ.ም · ኅዳር 3ኛ ሳምንት</p></div>
+        <span class="pill soft">8/8 ተሞልቷል</span>
+      </div>
+      <div class="mt-3 rounded-[12px] bg-white/70 border border-white px-3 py-2.5 flex items-center gap-2.5">
+        <span class="ms" style="font-size:19px;color:var(--primary)">send</span>
+        <span class="text-[13px]">ለ<b class="font-semibold">፡ መ/ር ተስፋዬ አበበ</b> <span class="text-[#5B6675]">· የማስተባበሪያው ኃላፊ</span></span>
+      </div>
+      <div class="flex mt-3 pt-3 border-t border-white">
+        <div class="stat"><b>2</b><span>መርሐ ግብሮች</span></div>
+        <div class="w-px bg-[#E3E8EF]"></div>
+        <div class="stat"><b>86</b><span>የመርሐ ግብር ተሳታፊ</span></div>
+        <div class="w-px bg-[#E3E8EF]"></div>
+        <div class="stat"><b>3</b><span>ኮርስ እና ስልጠና</span></div>
+      </div>
+    </section>
+
+    <p class="section-note"><span class="ms" style="font-size:16px">fact_check</span>ከመላክዎ በፊት እያንዳንዱን ክፍል ይመልከቱ።</p>
+
+    <section class="card overflow-hidden" id="rv"></section>
+
+    <div id="offline" class="hidden rounded-[14px] px-3.5 py-3 flex items-start gap-2.5 text-[13px] leading-relaxed" style="background:#F1F3F7;color:var(--text-2)">
+      <span class="ms" style="font-size:19px">wifi_off</span><span><b style="color:var(--text)">ለመላክ ኢንተርኔት ያስፈልጋል።</b> ሪፖርቱ በስልክዎ ተቀምጧል፤ ኢንተርኔት ሲገኝ ይላኩ።</span></div>
+
+    <div class="confirm" id="confirm" role="checkbox" aria-checked="false">
+      <span class="box"><span class="ms">check</span></span>
+      <span>ያስገባሁት መረጃ ትክክል መሆኑን አረጋግጣለሁ። ከተላከ በኋላ ኃላፊው ካልመለሱት በስተቀር ማስተካከል አይቻልም።</span>
+    </div>
+  </div>
+</main>
+
+<div class="actionbar">
+  <button class="btn btn-primary" id="send" disabled><span class="ms" style="font-size:20px">send</span><span id="sendT">ሪፖርቱን ላክ</span></button>
+</div>
+
+<script src="assets/section.js"></script>
+<script>
+const R = [
+  ['calendar_month', 'መርሐ ግብር እና ተሳትፎ', 'section-program.html', 'መደበኛ፡ ምሥጢረ ሥላሴ · 46 ተሳታፊ<br>የአንድነት፡ የቅዱስ ያሬድ ዜማ · 40 ተሳታፊ · <span style="color:var(--warn)">መምህሩ አልተገኙም (በሰንበት ት/ቤት ተሸፍኗል)</span>'],
+  ['menu_book', 'ተከታታይ ኮርሶች', 'section-courses.html', 'መሠረተ ሃይማኖት · 1ኛ፣ 2ኛ ባች · 32 ተሳታፊ · 2 ሰዓት'],
+  ['translate', 'በሌሎች ቋንቋዎች ኮርሶች', 'section-languages.html', '<span style="color:var(--muted)">በዚህ ሳምንት አልነበረም</span>'],
+  ['school', 'ሳምንታዊ ስልጠና', 'section-training.html', 'የአገልግሎት ሥነ ምግባር · ሥራ አመራር · 2 ቀን · 42 ተሳታፊ'],
+  ['history_edu', 'አብነት እና ግዕዝ', 'section-abinet.html', 'ግዕዝ ቋንቋ፣ ቅዳሴ · በሳምንት 3 ቀን · 18 ተማሪዎች'],
+  ['music_note', 'የመዝሙር ጥናት', 'section-mezmur.html', '3 መዝሙራት · 18 ተሳታፊ<br>የወረዳ ጥናት፡ 1 መዝሙር · 5 ተሳታፊ'],
+  ['event_note', 'አጀንዳ እና ውሳኔዎች', 'section-agenda.html', 'ስብሰባ ኅዳር 15 · 5 ተሳታፊ · 3 አጀንዳዎች ከውሳኔ ጋር'],
+  ['help', 'ችግሮች እና መፍትሄዎች', 'section-problems.html', '1 ችግር ከመፍትሄ ጋር'],
+  ['add_circle', 'ተጨማሪ ተግባራት', 'section-extra.html', 'የሕሙማን ጉብኝት · 15 ተሳታፊ'],
+];
+document.getElementById('rv').innerHTML = R.map(([ic, t, href, body]) => `
+  <div class="rv"><span class="ic"><span class="ms">${ic}</span></span>
+    <div class="min-w-0"><h4>${t}</h4><p>${body}</p></div>
+    <a class="edit" href="${href}">አስተካክል<span class="ms">chevron_right</span></a></div>`).join('<div class="divider mx-3.5"></div>');
+
+const returned = new URLSearchParams(location.search).get('state') === 'returned';
+if (returned) {
+  document.getElementById('week').textContent = 'ኅዳር 5 – 11, 2019 ዓ.ም · ኅዳር 2ኛ ሳምንት';
+  document.getElementById('sendT').textContent = 'እንደገና ላክ';
+  document.querySelector('.appbar a').href = 'weekly-report.html?state=returned';
+}
+const c = document.getElementById('confirm'), send = document.getElementById('send');
+const off = window.GG_OFFLINE;   // set by section.js
+document.getElementById('offline').classList.toggle('hidden', !off);
+c.onclick = () => { const on = !c.classList.contains('on'); c.classList.toggle('on', on); c.setAttribute('aria-checked', on); send.disabled = !on || off; };
+send.onclick = () => location.href = returned ? 'submitted.html?state=resent' : 'submitted.html';
+</script>
+</body>
+</html>

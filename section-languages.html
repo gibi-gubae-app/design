@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="am">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>በሌሎች ቋንቋዎች ኮርሶች · Courses in other languages</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/prefs.js"></script>
+<script src="assets/form.js"></script>
+</head>
+<body data-none="በዚህ ሳምንት በሌላ ቋንቋ ኮርስ አልነበረም">
+<header class="appbar"><div class="row">
+  <a href="weekly-report.html" class="icon-btn -ml-2 text-inherit" aria-label="ተመለስ"><span class="ms">arrow_back</span></a>
+  <h1>በሌሎች ቋንቋዎች ኮርሶች</h1>
+  <span class="pill saved"><span class="ms" style="font-size:14px">cloud_done</span>ተቀምጧል</span>
+</div></header>
+
+<main class="relative overflow-hidden px-4 pt-[64px] pb-32">
+  <div class="glow" style="height:300px"></div>
+  <div class="layer flex flex-col gap-3.5">
+    <p class="section-note"><span class="ms" style="font-size:16px">info</span>ከአማርኛ ውጪ በሌሎች ቋንቋዎች የተሰጡ ኮርሶች።</p>
+    <div id="list" class="flex flex-col gap-3.5"></div>
+    <button class="btn btn-ghost" id="add" type="button" style="height:46px"><span class="ms" style="font-size:20px">add</span>ሌላ ኮርስ ጨምር</button>
+  </div>
+</main>
+
+<div class="actionbar"><button class="btn btn-primary" type="button" onclick="location.href='weekly-report.html'"><span class="ms" style="font-size:20px">check</span>ጨርሻለሁ</button></div>
+
+<script>
+const LANGS = ['አፋን ኦሮሞ', 'ትግርኛ', 'እንግሊዝኛ'];
+F.repeater({
+  list: document.getElementById('list'), addBtn: document.getElementById('add'), title: 'ኮርስ',
+  body: d => `
+    ${F.choice('ቋንቋ', LANGS, d.lang, 'ቋንቋውን ይጻፉ', 'f-lang')}
+    ${F.attendance(d.m ?? 0, d.f ?? 0)}
+    ${F.text('የኮርሱ ስም', d.topic ?? '', 'ለምሳሌ፡ Barnoota Amantaa', 'topic')}
+    ${F.date('ቀን', d.date ?? 'ኅዳር 15, 2019')}
+    ${F.batch(d.batch ?? ['1ኛ ባች'])}
+    ${F.assignedTeacher(d.tName ?? '', d.present ?? true, d.coverType, d.coverName ?? '', d.reason ?? '')}
+    ${F.hours('የወሰደው ሰዓት', d.hours ?? '')}
+    ${F.more(F.problems(), 'ችግር እና መፍትሄ')}`,
+  summary: c => `${F.picked(c, '.f-lang')} · ${F.val(c, '.topic') || 'ስም አልተጻፈም'} · ${F.chipsOf(c, '.f-batch').join('፣ ')} · ${F.total(c)} ተሳታፊ` + (F.absent(c) ? ' · መምህሩ አልተገኙም' : ''),
+  items: [{ lang: 'አፋን ኦሮሞ', topic: 'Barnoota Amantaa', tType: 'ማ/ቅ መምህር', tName: 'መምህር ገመቹ', hours: 2, m: 11, f: 13 }],
+});
+</script>
+<script src="assets/section.js"></script>
+</body>
+</html>

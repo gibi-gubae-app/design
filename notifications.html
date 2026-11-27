@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="am">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ማሳወቂያ · Notifications</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/prefs.js"></script>
+<style>
+.chip{flex-shrink:0;height:34px;padding:0 14px;border-radius:99px;font-size:13px;font-weight:500;background:#fff;border:1px solid var(--border);color:var(--text-2);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip b{font-size:11.5px;min-width:20px;height:20px;padding:0 6px;border-radius:99px;background:var(--gold);color:#fff;display:inline-flex;align-items:center;justify-content:center}
+.chip.on{color:#fff;border-color:transparent;background:linear-gradient(180deg,var(--primary-2),var(--primary));box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 4px 10px rgba(29,58,107,.2)}
+
+.n{display:flex;gap:12px;padding:14px;position:relative;cursor:pointer;transition:background .3s}
+.n + .n{border-top:1px solid var(--divider)}
+.n.unread{background:linear-gradient(90deg,rgba(232,238,248,.8),rgba(232,238,248,.3))}
+.n .dot{position:absolute;top:18px;right:14px;width:8px;height:8px;border-radius:50%;background:var(--gold);transition:transform .25s,opacity .25s}
+.n:not(.unread) .dot{transform:scale(0);opacity:0}
+.n .ic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.n .ic .ms{font-size:20px}
+.n h4{margin:0;font-size:14px;font-weight:600;padding-right:18px;transition:color .3s}
+.n:not(.unread) h4{font-weight:500;color:#36404E}
+.n p{margin:3px 0 0;font-size:12.5px;color:var(--text-2);line-height:1.6;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.n.open p{-webkit-line-clamp:unset;display:block}
+.n .more{display:none;align-items:center;gap:2px;margin-top:2px;font-size:12px;font-weight:600;color:var(--primary);background:none;border:0;padding:0;cursor:pointer}
+.n.long .more{display:inline-flex}
+.n .more .ms{font-size:16px;transition:transform .2s}
+.n.open .more .ms{transform:rotate(180deg)}
+.n .meta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}
+.n time{font-size:11.5px;color:var(--muted);display:flex;align-items:center;gap:4px}
+.n time .ms{font-size:14px}
+.n .read-tag{display:none;color:var(--primary)}
+.n:not(.unread) .read-tag{display:inline}
+/* action button: outlined → turns solid blue-black when tapped */
+.act{display:inline-flex;align-items:center;gap:2px;height:30px;padding:0 12px;border-radius:99px;font-size:12.5px;font-weight:600;
+  color:var(--primary);background:#fff;border:1px solid #B9C8DF;text-decoration:none;transition:all .2s;flex-shrink:0}
+.act .ms{font-size:16px}
+.act.pressed{color:#fff;border-color:transparent;background:linear-gradient(180deg,var(--primary-2),var(--primary));box-shadow:0 4px 10px rgba(29,58,107,.25)}
+.ic.navy{background:var(--primary-tint);color:var(--primary)} .ic.gold{background:#FBF3E2;color:#A67A1C}
+.ic.amber{background:var(--warn-bg);color:var(--warn)} .ic.ok{background:var(--ok-bg);color:var(--ok)} .ic.red{background:var(--err-bg);color:var(--err)}
+.group{margin:0 0 8px;padding:0 4px;font-size:12.5px;font-weight:600;color:var(--text-2)}
+</style>
+</head>
+<body>
+<header class="appbar"><div class="h-16 px-5 flex items-center justify-between">
+  <h1 class="m-0 text-[22px] font-bold flex items-center gap-2.5">
+    <span class="w-9 h-9 rounded-full flex items-center justify-center" style="background:var(--primary-tint);color:var(--primary)"><span class="ms fill" style="font-size:20px">notifications</span></span>ማሳወቂያ</h1>
+  <button id="readAll" type="button" class="text-[13px] font-semibold text-[#1D3A6B] flex items-center gap-1" style="background:none;border:0;cursor:pointer"><span class="ms" style="font-size:18px">done_all</span>ሁሉንም አንብብ</button>
+</div></header>
+
+<main class="relative overflow-hidden px-4 pt-[68px] pb-32">
+  <div class="glow" style="height:300px"></div>
+  <div class="layer flex flex-col gap-4">
+    <div class="flex gap-2" id="chips">
+      <button class="chip on" data-f="all">ሁሉም</button>
+      <button class="chip" data-f="unread">ያልተነበቡ <b id="unreadCount">3</b></button>
+    </div>
+    <div id="groups" class="flex flex-col gap-4"></div>
+  </div>
+</main>
+
+<nav class="navwrap" data-active="2"></nav>
+<script src="assets/nav.js"></script>
+<script>
+// [group, icon, colour, title, text, time, unread, action label, action link]
+const N = [
+  ['ዛሬ', 'alarm', 'navy', 'የሪፖርት ማስታወሻ', 'የዚህ ሳምንት ሪፖርት የመጨረሻ ቀን ሰኞ ማታ ነው። 3 ቀን ቀርቷል፤ 3 ክፍሎች ይቀራሉ።', 'ከ2 ሰዓት በፊት', 1, 'ሪፖርቱን ቀጥል', 'weekly-report.html'],
+  ['ዛሬ', 'campaign', 'navy', 'ከማስተባበሪያው መልእክት', 'በመጪው ሐሙስ ኅዳር 24 ለሁሉም አስተባባሪዎች የአንድ ሰዓት ስልጠና ይዘጋጃል። ቦታ፡ ቅዱስ ሩፋኤል ቤ/ክ አዳራሽ፣ ሰዓት፡ 11:00 ከቀኑ። እባክዎ በሰዓቱ ይገኙ፤ ያልተሞሉ ሪፖርቶች ካሉ ይዘው ይምጡ።', 'ከ6 ሰዓት በፊት', 1],
+  ['ዛሬ', 'lock_open', 'navy', 'የሪፖርት ጊዜ ተከፍቷል', 'የኅዳር 12 – 18 ሪፖርት ማስገቢያ ከዛሬ (ዓርብ) እስከ ሰኞ ማታ ክፍት ነው።', 'ዓርብ · 2:00 ጠዋት', 0],
+  ['ትናንት', 'undo', 'amber', 'ሪፖርቱ ለማስተካከል ተመልሷል', 'የኅዳር 5 – 11 ሪፖርት ተመልሷል። የኃላፊ አስተያየት፡ «በመርሐ ግብር 2 ላይ የተሳታፊ ቁጥር በወንድ እና ሴት ተለይቶ አልተጻፈም፤ እባክዎ ይለዩ። መምህሩ ያልተገኙበትን ምክንያት ይጻፉ። ካስተካከሉ በኋላ እንደገና ይላኩ።» — መ/ር ተስፋዬ አበበ', 'ሐሙስ · 4:30 ከቀኑ', 1, 'አስተካክል', 'report-detail.html?state=returned'],
+  ['ቀደም ብሎ', 'visibility', 'navy', 'ሪፖርቱ በግምገማ ላይ ነው', 'የጥቅምት 28 – ኅዳር 4 ሪፖርትዎን ኃላፊው እየገመገሙት ነው።', 'ኅዳር 8', 0, 'ይመልከቱ', 'report-detail.html?state=review'],
+  ['ቀደም ብሎ', 'verified', 'ok', 'ሪፖርቱ ጸድቋል', 'የጥቅምት 14 – 20 ሪፖርትዎ በመ/ር ተስፋዬ ጸድቋል። እናመሰግናለን!', 'ጥቅምት 27', 0],
+  ['ቀደም ብሎ', 'schedule', 'red', 'ሪፖርት ዘግይቷል', 'የጥቅምት 14 – 20 ሪፖርት እስከ ሰኞ ማታ አልገባም። እባክዎ በተቻለ ፍጥነት ያስገቡ።', 'ጥቅምት 24', 0],
+];
+const groups = [...new Set(N.map(n => n[0]))];
+document.getElementById('groups').innerHTML = groups.map(g => `<div><h3 class="group">${g}</h3><section class="card overflow-hidden">${
+  N.filter(n => n[0] === g).map(([, ic, col, t, txt, time, unread, act, href]) => `
+    <div class="n ${unread ? 'unread' : ''}" role="button" tabindex="0"><span class="dot"></span>
+      <span class="ic ${col}"><span class="ms">${ic}</span></span>
+      <div class="min-w-0 flex-1"><h4>${t}</h4><p>${txt}</p>
+        <button type="button" class="more"><span class="lbl">ተጨማሪ ያንብቡ</span><span class="ms">expand_more</span></button>
+        <div class="meta"><time>${time}<span class="read-tag">· <span class="ms" style="vertical-align:-3px">done_all</span>ተነቧል</span></time>
+          ${act ? `<a class="act" href="${href}">${act}<span class="ms">chevron_right</span></a>` : ''}</div></div>
+    </div>`).join('')}</section></div>`).join('');
+
+const items = [...document.querySelectorAll('.n')];
+// show "ተጨማሪ ያንብቡ" only when text is longer than two lines
+const markLong = () => items.forEach(n => { const p = n.querySelector('p'); n.classList.toggle('long', n.classList.contains('open') || p.scrollHeight > p.clientHeight + 2); });
+document.fonts.ready.then(markLong);
+
+const count = () => { const k = items.filter(i => i.classList.contains('unread')).length, b = document.getElementById('unreadCount'); b.textContent = k; b.style.display = k ? '' : 'none'; };
+let filter = 'all';
+const apply = () => document.querySelectorAll('#groups > div').forEach(g => {
+  let any = false;
+  g.querySelectorAll('.n').forEach(n => { const show = filter === 'all' || n.classList.contains('unread'); n.style.display = show ? '' : 'none'; any = any || show; });
+  g.style.display = any ? '' : 'none';
+});
+
+items.forEach(n => n.addEventListener('click', e => {
+  n.classList.remove('unread'); count();                              // tapping marks it as read
+  const act = e.target.closest('.act');
+  if (act) { e.preventDefault(); act.classList.add('pressed'); setTimeout(() => location.href = act.href, 260); return; }
+  if (n.classList.contains('long')) {                                 // tapping a long one opens / closes it
+    n.classList.toggle('open');
+    n.querySelector('.more .lbl').textContent = n.classList.contains('open') ? 'ዝጋ' : 'ተጨማሪ ያንብቡ';
+  }
+}));
+document.getElementById('chips').onclick = e => { const c = e.target.closest('.chip'); if (!c) return;
+  document.querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x === c)); filter = c.dataset.f; apply(); };
+document.getElementById('readAll').onclick = () => { items.forEach(i => i.classList.remove('unread')); count(); apply(); };
+count();
+</script>
+</body>
+</html>

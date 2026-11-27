@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="am">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ሳምንታዊ ስልጠና · Weekly training</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/prefs.js"></script>
+<script src="assets/form.js"></script>
+</head>
+<body data-none="በዚህ ሳምንት ስልጠና አልነበረም">
+<header class="appbar"><div class="row">
+  <a href="weekly-report.html" class="icon-btn -ml-2 text-inherit" aria-label="ተመለስ"><span class="ms">arrow_back</span></a>
+  <h1>ሳምንታዊ ስልጠና</h1>
+  <span class="pill saved"><span class="ms" style="font-size:14px">cloud_done</span>ተቀምጧል</span>
+</div></header>
+
+<main class="relative overflow-hidden px-4 pt-[64px] pb-32">
+  <div class="glow" style="height:300px"></div>
+  <div class="layer flex flex-col gap-3.5">
+    <p class="section-note"><span class="ms" style="font-size:16px">info</span>በዚህ ሳምንት የተሰጡ ስልጠናዎች።</p>
+    <div id="list" class="flex flex-col gap-3.5"></div>
+    <button class="btn btn-ghost" id="add" type="button" style="height:46px"><span class="ms" style="font-size:20px">add</span>ሌላ ስልጠና ጨምር</button>
+  </div>
+</main>
+
+<div class="actionbar"><button class="btn btn-primary" type="button" onclick="location.href='weekly-report.html'"><span class="ms" style="font-size:20px">check</span>ጨርሻለሁ</button></div>
+
+<script>
+const WHO = ['አባላት', 'ሥራ አመራር', 'ኮሚቴ', 'አዲስ ገቢ ተማሪዎች'];
+const DAYS = ['1 ቀን', '2 ቀን', '3 ቀን', '4 ቀን', '5 ቀን'];
+F.repeater({
+  list: document.getElementById('list'), addBtn: document.getElementById('add'), title: 'ስልጠና',
+  body: d => `
+    ${F.text('የስልጠናው ርዕስ', d.topic ?? '', 'ለምሳሌ፡ የአገልግሎት ሥነ ምግባር', 'topic')}
+    ${F.attendance(d.m ?? 0, d.f ?? 0)}
+    ${F.choice('ሠልጣኞች', WHO, d.who, 'ሠልጣኞቹን ይግለጹ', 'f-who')}
+    ${F.date('የተጀመረበት ቀን', d.date ?? 'ኅዳር 17, 2019')}
+    ${F.choice('የስልጠና ቀን ብዛት', DAYS, d.days, 'የቀን ብዛት ይጻፉ', 'f-days')}
+    ${F.teacher('አሠልጣኝ', d.tType, d.tName ?? '')}
+    ${F.hours('በቀን የወሰደው ሰዓት', d.hours ?? '')}
+    ${F.more(F.problems(d.p ?? '', d.s ?? ''), 'ችግር እና መፍትሄ', !!d.p)}`,
+  summary: c => `${F.val(c, '.topic') || 'ርዕስ አልተጻፈም'} · ${F.picked(c, '.f-days')} · ${F.total(c)} ተሳታፊ`,
+  items: [{ topic: 'የአገልግሎት ሥነ ምግባር', who: 'ሥራ አመራር', days: '2 ቀን', tType: 'ማ/ቅ መምህር', tName: 'ዲያቆን ኤፍሬም', hours: 3, m: 20, f: 22,
+            p: 'የአዳራሽ እጥረት', s: 'ከደብሩ ጋር በመነጋገር የሰንበት ት/ቤት አዳራሽ ተፈቅዷል' }],
+});
+</script>
+<script src="assets/section.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="am">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>የመዝሙር ጥናት · Hymn study</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/prefs.js"></script>
+<script src="assets/form.js"></script>
+</head>
+<body data-none="በዚህ ሳምንት የመዝሙር ጥናት አልነበረም">
+<header class="appbar"><div class="row">
+  <a href="weekly-report.html" class="icon-btn -ml-2 text-inherit" aria-label="ተመለስ"><span class="ms">arrow_back</span></a>
+  <h1>የመዝሙር ጥናት</h1>
+  <span class="pill saved"><span class="ms" style="font-size:14px">cloud_done</span>ተቀምጧል</span>
+</div></header>
+
+<main class="relative overflow-hidden px-4 pt-[64px] pb-32">
+  <div class="glow" style="height:300px"></div>
+  <div class="layer flex flex-col gap-3.5">
+    <p class="section-note"><span class="ms" style="font-size:16px">info</span>በዚህ ሳምንት የተደረጉ የመዝሙር ጥናቶች።</p>
+    <div id="list" class="flex flex-col gap-3.5"></div>
+    <button class="btn btn-ghost" id="add" type="button" style="height:46px"><span class="ms" style="font-size:20px">add</span>ሌላ ጥናት ጨምር</button>
+    <h3 class="m-0 mt-3 px-1 text-[15px] font-semibold flex items-center gap-2"><span class="ms" style="font-size:20px;color:var(--primary)">location_city</span>በወረዳ ማእከሉ በአስጠኚዎች ጥናት የተሳተፉ</h3>
+    <div id="list2" class="flex flex-col gap-3.5"></div>
+    <button class="btn btn-ghost" id="add2" type="button" style="height:46px"><span class="ms" style="font-size:20px">add</span>ሌላ የወረዳ ጥናት ጨምር</button>
+  </div>
+</main>
+
+<div class="actionbar"><button class="btn btn-primary" type="button" onclick="location.href='weekly-report.html'"><span class="ms" style="font-size:20px">check</span>ጨርሻለሁ</button></div>
+
+<script>
+const WHO = ['ሁሉም ዓመት ተማሪ', 'የመዝሙር ክፍል', 'አዲስ ገቢ ተማሪዎች'];
+const body = d => `
+    ${F.chipsMulti('የጥናቱ ተሳታፊ', WHO, d.who ?? [], 'ተሳታፊዎቹን ይግለጹ', 'f-who')}
+    ${F.attendance(d.m ?? 0, d.f ?? 0)}
+    ${F.date('የጥናት ቀን', d.date ?? 'ኅዳር 15, 2019')}
+    ${F.list('የተጠኑ መዝሙራት', 'ከአንድ በላይ ይቻላል', ['የመዝሙሩ ርዕስ'], d.songs ?? [['']], 'መዝሙር ጨምር')}`;
+const summary = c => `${F.chipsOf(c, '.f-who').join('፣ ') || 'ተሳታፊ አልተመረጠም'} · ${c.querySelectorAll('.f-list .mini-row').length} መዝሙራት · ${F.total(c)} ተሳታፊ`;
+F.repeater({ list: document.getElementById('list'), addBtn: document.getElementById('add'), title: 'ጥናት', body, summary,
+  items: [{ who: ['ሁሉም ዓመት ተማሪ'], songs: [['ይህንን ጉባኤ'], ['አድርገህልኛልና'], ['አስተምሮናልና']], m: 15, f: 3 }] });
+F.repeater({ list: document.getElementById('list2'), addBtn: document.getElementById('add2'), title: 'የወረዳ ጥናት', body, summary,
+  items: [{ who: ['የመዝሙር ክፍል'], date: 'ኅዳር 17, 2019', songs: [['ነዓ ኀቤነ']], m: 4, f: 1 }] });
+</script>
+<script src="assets/section.js"></script>
+</body>
+</html>

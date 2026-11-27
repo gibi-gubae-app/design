@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="am">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ዋና ገጽ · Home</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/prefs.js"></script>
+</head>
+<body>
+<header class="appbar" style="background:transparent;backdrop-filter:none">
+  <div class="h-16 px-5 flex items-center justify-between">
+    <div class="flex items-center gap-2.5">
+      <img src="assets/logo-round.png" alt="ማኅበረ ቅዱሳን" class="w-9 h-9 rounded-full" style="box-shadow:0 0 0 2px #fff,0 2px 6px rgba(29,58,107,.18)">
+      <span class="text-[15px] font-semibold text-[#1D3A6B]">ግቢ ጉባኤ</span>
+    </div>
+    <a href="notifications.html" class="icon-btn relative" aria-label="ማሳወቂያዎች"><span class="ms">notifications</span>
+      <span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#C9962B] ring-2 ring-[#F6F8FB]"></span></a>
+  </div>
+</header>
+
+<main class="relative overflow-hidden px-5 pt-16 pb-32">
+  <div class="glow"></div>
+  <div class="layer flex flex-col gap-5">
+    <div class="pt-2">
+      <h2 class="text-[24px] font-bold leading-tight m-0">ሰላም፡ ዳዊት</h2>
+      <p class="text-[14px] text-[#5B6675] mt-0.5 mb-0">አስተባባሪ</p>
+    </div>
+
+    <!-- This week's report -->
+    <section class="glass" style="padding:18px 18px 18px">
+      <!-- title block: label, name, date grouped tightly -->
+      <div class="flex items-start justify-between gap-3">
+        <div class="min-w-0">
+          <span class="block text-[12px] font-medium text-[#5B6675]">የዚህ ሳምንት ሪፖርት</span>
+          <h3 class="text-[16px] font-semibold m-0 mt-1 leading-snug">አዲስ አበባ ዩኒቨርሲቲ ግቢ ጉባኤ</h3>
+          <p class="text-[12px] text-[#5B6675] m-0 mt-0.5">ኅዳር 12 – 18, 2019 ዓ.ም</p>
+        </div>
+        <span class="pill draft" style="background:rgba(255,255,255,.75);border:1px solid var(--border)">ረቂቅ</span>
+      </div>
+      <!-- progress -->
+      <div class="mt-4">
+        <div class="flex justify-between text-[12px] mb-1.5"><span class="text-[#5B6675]">የተሞሉ ክፍሎች</span><span class="font-semibold text-[#1D3A6B]">5/8</span></div>
+        <div class="track"><i style="width:63%"></i></div>
+      </div>
+      <!-- deadline -->
+      <div class="mt-3.5 rounded-[12px] bg-white/65 border border-white px-3 py-2.5 flex items-center justify-between">
+        <div class="flex items-center gap-2"><span class="ms text-[#1D3A6B]" style="font-size:18px">schedule</span>
+          <span class="text-[13px] font-medium">የመጨረሻ ቀን፡ ሰኞ ምሽት</span></div>
+        <span class="pill soft">3 ቀን ቀርቷል</span>
+      </div>
+      <a href="weekly-report.html" class="btn btn-primary no-underline mt-3.5">ሪፖርቱን ቀጥል <span class="ms" style="font-size:19px">arrow_forward</span></a>
+    </section>
+
+    <!-- Returned notice -->
+    <a href="report-detail.html?state=returned" class="rounded-[14px] px-4 py-3.5 flex items-center justify-between gap-3 no-underline"
+       style="background:var(--warn-bg);border:1px solid var(--warn-line);color:#8A5200">
+      <span class="flex items-center gap-2 min-w-0"><span class="ms" style="font-size:20px">info</span>
+        <span class="text-sm font-medium leading-snug">1 ሪፖርት ተመልሷል</span></span>
+      <span class="text-sm font-semibold flex items-center shrink-0">ይመልከቱ<span class="ms" style="font-size:18px">chevron_right</span></span>
+    </a>
+
+    <!-- Recent reports -->
+    <section class="flex flex-col gap-3">
+      <div class="flex items-center justify-between px-1">
+        <h3 class="text-base font-semibold m-0">የቅርብ ጊዜ ሪፖርቶች</h3>
+        <a href="reports.html" class="text-sm font-medium text-[#1D3A6B] no-underline">ሁሉንም</a>
+      </div>
+      <div class="card overflow-hidden">
+        <a href="report-detail.html?state=returned" class="flex items-center justify-between gap-3 px-4 h-16 no-underline text-inherit"><span class="text-sm font-medium">ኅዳር 5 – 11, 2019</span>
+          <span class="flex items-center gap-2 shrink-0"><span class="pill warn">ተመልሷል</span><span class="ms text-[#8A94A3]" style="font-size:20px">chevron_right</span></span></a>
+        <div class="divider"></div>
+        <a href="report-detail.html?state=review" class="flex items-center justify-between gap-3 px-4 h-16 no-underline text-inherit"><span class="text-sm font-medium">ጥቅምት 28 – ኅዳር 4, 2019</span>
+          <span class="flex items-center gap-2 shrink-0"><span class="pill info">በግምገማ ላይ</span><span class="ms text-[#8A94A3]" style="font-size:20px">chevron_right</span></span></a>
+        <div class="divider"></div>
+        <a href="report-detail.html?state=resent" class="flex items-center justify-between gap-3 px-4 h-16 no-underline text-inherit"><span class="text-sm font-medium">ጥቅምት 21 – 27, 2019</span>
+          <span class="flex items-center gap-2 shrink-0"><span class="pill info">እንደገና ተልኳል</span><span class="ms text-[#8A94A3]" style="font-size:20px">chevron_right</span></span></a>
+      </div>
+    </section>
+  </div>
+</main>
+
+<nav class="navwrap" data-active="0"></nav>
+<script src="assets/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="am">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ግባ · Login</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/prefs.js"></script>
+<style>
+.logo{position:relative;width:92px;height:92px;margin:0 auto}
+.logo .ring{position:absolute;inset:-7px;border-radius:50%;border:1.5px solid rgba(201,150,43,.55)}
+.logo img{width:100%;height:100%;border-radius:50%;box-shadow:0 0 0 3px #fff,0 12px 28px rgba(29,58,107,.22)}
+.input.lg{height:50px}
+.eye{border:0;background:none;color:var(--muted);cursor:pointer;display:flex;padding:0}
+.err{display:none;align-items:center;gap:6px;font-size:12.5px;color:var(--err);padding:0 2px}
+.form.bad .err{display:flex}
+.form.bad .pw{border-color:#E9A39B}
+.panel{display:none}.panel.on{display:block;animation:fi .35s both}
+@keyframes fi{from{opacity:0;transform:translateY(8px)}}
+.rules{display:flex;flex-direction:column;gap:7px;padding:2px 2px 0}
+.rule{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);transition:color .15s}
+.rule .ms{font-size:17px}
+.rule.ok{color:var(--primary)}
+.meter{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:-4px}
+.meter i{height:4px;border-radius:9px;background:#E3E8EF;transition:background .2s}
+.steps{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:22px;font-size:12px;color:var(--text-2)}
+.steps b{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11.5px;background:#E3E8EF;color:var(--text-2)}
+.steps .on b{background:var(--primary);color:#fff}.steps .done b{background:var(--primary-tint);color:var(--primary)}
+.steps .ln{width:26px;height:1.5px;background:#D6DDE7}
+</style>
+</head>
+<body>
+<main class="relative overflow-hidden px-6 min-h-screen flex flex-col">
+  <div class="glow" style="height:560px"></div>
+  <div class="layer flex-1 flex flex-col pt-14 pb-8">
+
+    <div class="logo"><span class="ring"></span><img src="assets/logo-round.png" alt="ማኅበረ ቅዱሳን"></div>
+
+    <!-- sign in -->
+    <div class="panel on" id="pLogin">
+      <h1 class="m-0 mt-7 text-center text-[24px] font-bold">እንኳን በደህና ተመለሱ</h1>
+      <p class="m-0 mt-1.5 text-center text-[13.5px] text-[#5B6675]">ለመቀጠል ወደ መለያዎ ይግቡ</p>
+
+      <form class="form glass mt-7 flex flex-col gap-3.5" style="padding:18px" id="loginForm" onsubmit="return false">
+        <label class="field"><span class="label">ኢሜይል</span>
+          <span class="input lg"><span class="ms">mail</span><input type="email" placeholder="name@example.com" value="dawit.tekle@example.com" autocomplete="username"></span></label>
+        <label class="field"><span class="label">የይለፍ ቃል</span>
+          <span class="input lg pw"><span class="ms">lock</span><input type="password" id="pw" placeholder="••••••••" autocomplete="current-password">
+            <button type="button" class="eye" id="eye" aria-label="የይለፍ ቃል አሳይ"><span class="ms">visibility</span></button></span></label>
+        <span class="err"><span class="ms" style="font-size:16px">error</span>ኢሜይል ወይም የይለፍ ቃል ትክክል አይደለም</span>
+        <div class="flex items-center justify-between -mt-1">
+          <label class="flex items-center gap-2 text-[13px] text-[#5B6675] cursor-pointer"><button type="button" class="switch on" id="remember" style="transform:scale(.8);margin-left:-4px" aria-label="አስታውሰኝ"></button>አስታውሰኝ</label>
+          <button type="button" class="text-[13px] font-semibold text-[#1D3A6B]" style="background:none;border:0;cursor:pointer" id="toForgot">የይለፍ ቃል ረሱ?</button>
+        </div>
+        <button class="btn btn-primary mt-1" id="signIn" type="submit">ግባ <span class="ms" style="font-size:19px">login</span></button>
+      </form>
+
+      <div class="mt-5 flex items-start gap-2.5 rounded-[14px] px-3.5 py-3 text-[12.5px] leading-relaxed" style="background:var(--primary-tint);color:var(--primary)">
+        <span class="ms" style="font-size:18px">info</span>
+        <span>መለያ የሚከፍተው ኃላፊዎ ነው። ለመጀመሪያ ጊዜ የተላከልዎትን ጊዜያዊ የይለፍ ቃል ይጠቀሙ፤ ለ7 ቀን ብቻ ያገለግላል።</span>
+      </div>
+    </div>
+
+    <!-- forgot password -->
+    <div class="panel" id="pForgot">
+      <h1 class="m-0 mt-7 text-center text-[24px] font-bold">የይለፍ ቃል ረሱ?</h1>
+      <p class="m-0 mt-1.5 text-center text-[13.5px] text-[#5B6675] px-2 leading-relaxed">ኢሜይልዎን ያስገቡ፤ አዲስ የይለፍ ቃል ማዘጋጃ ሊንክ እንልክልዎታለን።</p>
+      <div class="glass mt-7 flex flex-col gap-3.5" style="padding:18px">
+        <label class="field"><span class="label">ኢሜይል</span>
+          <span class="input lg"><span class="ms">mail</span><input type="email" placeholder="name@example.com" value="dawit.tekle@example.com"></span></label>
+        <button class="btn btn-primary" id="sendLink" type="button">ሊንክ ላክ <span class="ms" style="font-size:19px">send</span></button>
+      </div>
+      <button type="button" class="btn mt-3" style="background:transparent;color:var(--primary);height:44px" data-back><span class="ms" style="font-size:19px">arrow_back</span>ወደ መግቢያ ተመለስ</button>
+    </div>
+
+    <!-- link sent -->
+    <div class="panel" id="pSent">
+      <div class="mt-8 mx-auto w-16 h-16 rounded-full flex items-center justify-center" style="background:var(--primary-tint);color:var(--primary)"><span class="ms" style="font-size:32px">mark_email_read</span></div>
+      <h1 class="m-0 mt-5 text-center text-[22px] font-bold">ኢሜይልዎን ይመልከቱ</h1>
+      <p class="m-0 mt-2 text-center text-[13.5px] text-[#5B6675] px-2 leading-relaxed">ወደ <b class="text-[#1E2633]">dawit.tekle@example.com</b> ሊንክ ተልኳል። ሊንኩን ከፍተው አዲስ የይለፍ ቃል ያዘጋጁ።</p>
+      <button type="button" class="btn btn-primary mt-7" data-back>ወደ መግቢያ ተመለስ</button>
+      <p class="m-0 mt-4 text-center text-[12.5px] text-[#8A94A3]">ኢሜይል አልደረሰዎትም? <button type="button" class="font-semibold text-[#1D3A6B]" style="background:none;border:0;cursor:pointer" id="resend">እንደገና ላክ</button></p>
+    </div>
+
+    <!-- first sign-in: replace the temporary password -->
+    <div class="panel" id="pNew">
+      <div class="steps"><span class="done flex items-center gap-1.5"><b><span class="ms" style="font-size:14px">check</span></b>ግባ</span><span class="ln"></span>
+        <span class="on flex items-center gap-1.5"><b>2</b>የይለፍ ቃል</span></div>
+      <h1 class="m-0 mt-4 text-center text-[22px] font-bold">የራስዎን የይለፍ ቃል ያዘጋጁ</h1>
+      <p class="m-0 mt-1.5 text-center text-[13px] text-[#5B6675] px-2 leading-relaxed">ይህ የመጀመሪያ መግቢያዎ ነው። ጊዜያዊው የይለፍ ቃል ለ7 ቀን ብቻ ያገለግላል፤ አሁን በራስዎ ይቀይሩት። ከዚህ በኋላ የሚያውቁት እርስዎ ብቻ ይሆናሉ።</p>
+      <form class="glass mt-6 flex flex-col gap-3.5" style="padding:18px" onsubmit="return false">
+        <label class="field"><span class="label">አዲስ የይለፍ ቃል</span>
+          <span class="input lg"><span class="ms">lock</span><input type="password" id="np1" placeholder="ቢያንስ 8 ፊደል" autocomplete="new-password">
+            <button type="button" class="eye" data-eye="np1" aria-label="አሳይ"><span class="ms">visibility</span></button></span></label>
+        <div class="meter" id="meter"><i></i><i></i><i></i></div>
+        <label class="field"><span class="label">የይለፍ ቃሉን ይድገሙ</span>
+          <span class="input lg"><span class="ms">lock_reset</span><input type="password" id="np2" placeholder="እንደገና ያስገቡ" autocomplete="new-password">
+            <button type="button" class="eye" data-eye="np2" aria-label="አሳይ"><span class="ms">visibility</span></button></span></label>
+        <div class="rules">
+          <span class="rule" data-r="len"><span class="ms">radio_button_unchecked</span>ቢያንስ 8 ፊደል ወይም ቁጥር</span>
+          <span class="rule" data-r="num"><span class="ms">radio_button_unchecked</span>ቢያንስ አንድ ቁጥር</span>
+          <span class="rule" data-r="same"><span class="ms">radio_button_unchecked</span>ሁለቱም አንድ ናቸው</span>
+        </div>
+        <button class="btn btn-primary mt-1" id="saveNew" type="button" disabled>አስቀምጥ እና ቀጥል <span class="ms" style="font-size:19px">arrow_forward</span></button>
+      </form>
+    </div>
+
+    <!-- password set -->
+    <div class="panel" id="pDone">
+      <div class="mt-10 mx-auto w-16 h-16 rounded-full flex items-center justify-center" style="background:var(--primary-tint);color:var(--primary)"><span class="ms" style="font-size:32px">verified_user</span></div>
+      <h1 class="m-0 mt-5 text-center text-[22px] font-bold">የይለፍ ቃልዎ ተቀምጧል</h1>
+      <p class="m-0 mt-2 text-center text-[13.5px] text-[#5B6675] px-2 leading-relaxed">ከአሁን ጀምሮ በኢሜይልዎ እና በአዲሱ የይለፍ ቃልዎ ይገባሉ።</p>
+      <a href="home.html" class="btn btn-primary no-underline mt-7">ወደ ዋና ገጽ</a>
+    </div>
+
+    <p class="m-0 mt-auto pt-6 text-center text-[11.5px] text-[#8A94A3]">ማኅበረ ቅዱሳን · ግቢ ጉባኤያት አገልግሎት</p>
+  </div>
+</main>
+
+<script>
+const show = id => document.querySelectorAll('.panel').forEach(p => p.classList.toggle('on', p.id === id));
+document.getElementById('toForgot').onclick = () => show('pForgot');
+document.getElementById('sendLink').onclick = () => show('pSent');
+document.getElementById('resend').onclick = e => { e.target.textContent = 'ተልኳል ✓'; };
+document.querySelectorAll('[data-back]').forEach(b => b.onclick = () => show('pLogin'));
+document.getElementById('remember').onclick = e => e.currentTarget.classList.toggle('on');
+const pw = document.getElementById('pw');
+const eye = (inp, btn) => { const s = inp.type === 'password'; inp.type = s ? 'text' : 'password'; btn.firstElementChild.textContent = s ? 'visibility_off' : 'visibility'; };
+document.getElementById('eye').onclick = e => eye(pw, e.currentTarget);
+document.querySelectorAll('[data-eye]').forEach(b => b.onclick = () => eye(document.getElementById(b.dataset.eye), b));
+// demo: empty password shows the error state; otherwise this demo user signs in for the first time
+// (real app: the server says if the password is the temporary one, then asks for a new one)
+document.getElementById('signIn').onclick = () => {
+  const f = document.getElementById('loginForm');
+  if (!pw.value) { f.classList.add('bad'); pw.focus(); return; }
+  f.classList.remove('bad'); show('pNew');
+};
+pw.oninput = () => document.getElementById('loginForm').classList.remove('bad');
+const np1 = document.getElementById('np1'), np2 = document.getElementById('np2'), saveNew = document.getElementById('saveNew');
+function check() {
+  const v = np1.value, r = { len: v.length >= 8, num: /\d/.test(v), same: v.length > 0 && v === np2.value };
+  document.querySelectorAll('.rule').forEach(el => { const ok = r[el.dataset.r]; el.classList.toggle('ok', ok); el.firstElementChild.textContent = ok ? 'check_circle' : 'radio_button_unchecked'; });
+  const score = !v ? 0 : (v.length >= 8) + /\d/.test(v) + (/[A-Z]/.test(v) || /[^\w]/.test(v) || v.length >= 12);
+  const col = ['#E3E8EF', '#D9822B', '#2F6FB5', '#1D3A6B'][score];
+  document.querySelectorAll('#meter i').forEach((m, i) => m.style.background = i < score ? col : '#E3E8EF');
+  saveNew.disabled = !(r.len && r.num && r.same);
+}
+np1.oninput = np2.oninput = check;
+saveNew.onclick = () => show('pDone');
+const st = new URLSearchParams(location.search).get('state');
+if (st === 'first') show('pNew'); if (st === 'done') show('pDone');
+if (st === 'forgot') show('pForgot'); if (st === 'sent') show('pSent');
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="am">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>መርሐ ግብር እና ተሳትፎ · Program & attendance</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/prefs.js"></script>
+<script src="assets/form.js"></script>
+</head>
+<body data-none="በዚህ ሳምንት መርሐ ግብር አልነበረም">
+<header class="appbar"><div class="row">
+  <a href="weekly-report.html" class="icon-btn -ml-2 text-inherit" aria-label="ተመለስ"><span class="ms">arrow_back</span></a>
+  <h1>መርሐ ግብር እና ተሳትፎ</h1>
+  <span class="pill saved"><span class="ms" style="font-size:14px">cloud_done</span>ተቀምጧል</span>
+</div></header>
+
+<main class="relative overflow-hidden px-4 pt-[64px] pb-32">
+  <div class="glow" style="height:300px"></div>
+  <div class="layer flex flex-col gap-3.5">
+    <p class="section-note"><span class="ms" style="font-size:16px">info</span>በዚህ ሳምንት የተካሄዱትን መርሐ ግብሮች እና የአንድነት ጉባኤዎች ይመዝግቡ። ተከታታይ ኮርስ በ«ተከታታይ ኮርሶች» ክፍል ይመዝገብ።</p>
+    <div id="list" class="flex flex-col gap-3.5"></div>
+    <button class="btn btn-ghost" id="add" type="button" style="height:46px"><span class="ms" style="font-size:20px">add</span>ሌላ መርሐ ግብር ጨምር</button>
+  </div>
+</main>
+
+<div class="actionbar"><button class="btn btn-primary" type="button" onclick="location.href='weekly-report.html'"><span class="ms" style="font-size:20px">check</span>ጨርሻለሁ</button></div>
+
+<script>
+const KINDS = ['መደበኛ', 'የአንድነት', 'ድኅረ ምረቃ', 'የምሥረታ በዓል'];
+F.repeater({
+  list: document.getElementById('list'), addBtn: document.getElementById('add'), title: 'መርሐ ግብር',
+  body: d => `
+    ${F.choice('የመርሐ ግብሩ ዓይነት', KINDS, d.kind, 'የመርሐ ግብሩን ዓይነት ይጻፉ', 'f-kind')}
+    ${F.attendance(d.m ?? 0, d.f ?? 0)}
+    ${F.date('ቀን', d.date ?? 'ኅዳር 14, 2019')}
+    ${F.batch(d.batch ?? ['2ኛ ባች'], true)}
+    ${F.text('የትምህርት ርዕስ', d.topic ?? '', 'የትምህርቱ ርዕስ', 'topic')}
+    ${F.assignedTeacher(d.tName ?? '', d.present ?? true, d.coverType, d.coverName ?? '', d.reason ?? '')}
+    ${F.times([['የታቀደው ሰዓት', d.plan], ['የተጀመረበት', d.start], ['ያለቀበት', d.stop]])}
+    ${F.area('በእለቱ የተሸፈነው ክፍል', d.covered ?? '', 'የተሸፈነውን የትምህርት ክፍል ይጻፉ…')}
+    ${F.more(F.mezmurList(d.mezmur ?? []) + F.area('ምርመራ / አስተያየት', d.note ?? '', 'ተጨማሪ አስተያየት…') + F.problems(), 'መዝሙር፣ አስተያየት እና ችግር', !!(d.mezmur && d.mezmur.length))}`,
+  summary: c => `${F.picked(c, '.f-kind')} · ${F.val(c, '.topic') || 'ርዕስ አልተጻፈም'} · ${F.chipsOf(c, '.f-batch').join('፣ ')} · ${F.total(c)} ተሳታፊ` + (F.absent(c) ? ' · መምህሩ አልተገኙም' : ''),
+  items: [
+    { kind: 'መደበኛ', topic: 'ምሥጢረ ሥላሴ', tName: 'መምህር ኃይለ ማርያም', plan: '2:00 ጠዋት', start: '2:15 ጠዋት', stop: '4:00 ጠዋት',
+      covered: 'ምዕራፍ 3፡ የሥላሴ አንድነት እና ሦስትነት', mezmur: [['ሥላሴ ቅዱሳን', 'ዲያቆን ሳሙኤል']], m: 24, f: 22 },
+    { kind: 'የአንድነት', date: 'ኅዳር 16, 2019', batch: ['1ኛ ባች', '2ኛ ባች'], topic: 'የቅዱስ ያሬድ ዜማ', tName: 'መምህር ቴዎድሮስ', present: false,
+      coverType: 'ሰንበት ት/ቤት', coverName: 'ዲያቆን ሳሙኤል', reason: 'ለአገልግሎት ከከተማ ውጪ ሄደዋል', plan: '10:00 ከቀኑ', start: '10:00 ከቀኑ', stop: '12:00 ከቀኑ', m: 18, f: 22 },
+  ],
+});
+</script>
+<script src="assets/section.js"></script>
+</body>
+</html>

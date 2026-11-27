@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="am">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ተልኳል · Submitted</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/prefs.js"></script>
+<style>
+.badge{position:relative;width:112px;height:112px;margin:0 auto}
+.badge .ring{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(201,150,43,.55);animation:pulse 2.4s ease-out infinite}
+.badge .ring.r2{animation-delay:1.2s}
+.badge .core{position:absolute;inset:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,#3A63A6,var(--primary));box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 12px 28px rgba(29,58,107,.35);
+  animation:pop .5s cubic-bezier(.2,1.4,.4,1) both}
+.badge svg{width:44px;height:44px}
+.badge path{fill:none;stroke:#fff;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:draw .45s .35s ease-out forwards}
+@keyframes pop{from{transform:scale(.4);opacity:0}}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes pulse{0%{transform:scale(.85);opacity:.9}100%{transform:scale(1.35);opacity:0}}
+.fade{animation:fade .5s .45s both}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}}
+.line{display:flex;justify-content:space-between;align-items:center;padding:11px 0;font-size:13.5px}
+.line span:first-child{color:var(--text-2)}
+</style>
+</head>
+<body>
+<main class="relative overflow-hidden px-5 min-h-screen flex flex-col">
+  <div class="glow" style="height:520px;top:40px"></div>
+  <div class="layer flex-1 flex flex-col justify-center pt-12 pb-6">
+    <div class="badge"><span class="ring"></span><span class="ring r2"></span>
+      <span class="core"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+
+    <div class="fade text-center mt-6">
+      <h1 class="m-0 text-[24px] font-bold" id="h">ሪፖርቱ ተልኳል!</h1>
+      <p class="m-0 mt-2 text-[14px] text-[#5B6675] leading-relaxed px-4" id="p">የኅዳር 12 – 18 ሳምንታዊ ሪፖርትዎ ለማስተባበሪያው ኃላፊ ደርሷል። ስለ አገልግሎትዎ እናመሰግናለን።</p>
+    </div>
+
+    <section class="glass fade mt-6" style="padding:6px 16px">
+      <div class="line"><span>ግቢ ጉባኤ</span><b class="font-semibold">አዲስ አበባ ዩኒቨርሲቲ</b></div>
+      <div class="divider"></div>
+      <div class="line"><span>የተላከለት</span><b class="font-semibold">መ/ር ተስፋዬ አበበ</b></div>
+      <div class="divider"></div>
+      <div class="line"><span>የተላከበት</span><b class="font-semibold" id="when">ዓርብ፣ ኅዳር 18 · 3:40 ማታ</b></div>
+      <div class="divider"></div>
+      <div class="line"><span>ሁኔታ</span><span class="pill info" id="pill">ተልኳል</span></div>
+    </section>
+
+    <div class="fade mt-4 flex items-start gap-2.5 rounded-[14px] px-3.5 py-3 text-[13px] leading-relaxed" style="background:var(--primary-tint);color:var(--primary)">
+      <span class="ms" style="font-size:19px">notifications_active</span>
+      <span>ኃላፊው ሪፖርቱን ሲያጸድቁ ወይም ለማስተካከል ሲመልሱ ማሳወቂያ ይደርስዎታል።</span>
+    </div>
+  </div>
+
+  <div class="layer fade pb-8 flex flex-col gap-2.5">
+    <a href="home.html" class="btn btn-primary no-underline">ወደ ዋና ገጽ</a>
+    <a href="reports.html" class="btn no-underline" style="background:transparent;color:var(--primary);height:44px">ሪፖርቱን ይመልከቱ</a>
+  </div>
+</main>
+<script>
+if (new URLSearchParams(location.search).get('state') === 'resent') {
+  document.getElementById('h').textContent = 'ሪፖርቱ እንደገና ተልኳል!';
+  document.getElementById('p').textContent = 'የተስተካከለው የኅዳር 5 – 11 ሪፖርትዎ ለኃላፊው ደርሷል። ስለ ፈጣን ማስተካከያዎ እናመሰግናለን።';
+  document.getElementById('pill').textContent = 'እንደገና ተልኳል';
+}
+</script>
+</body>
+</html>

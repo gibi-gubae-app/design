@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="am">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>እንኳን በደህና መጡ · Onboarding</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/prefs.js"></script>
+<style>
+body{overflow:hidden}
+.ob{position:fixed;inset:0;display:flex;flex-direction:column}
+.top{height:56px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2}
+.dots{display:flex;gap:6px}
+.dots i{width:8px;height:8px;border-radius:99px;background:#D5DCE5;transition:all .3s}
+.dots i.on{width:22px;background:linear-gradient(90deg,#3A63A6,var(--primary))}
+.skip{border:0;background:none;color:var(--text-2);font-size:13.5px;font-weight:500;cursor:pointer;min-width:40px;text-align:right}
+.track-x{flex:1;display:flex;transition:transform .45s cubic-bezier(.65,0,.35,1);position:relative;z-index:1}
+.step{min-width:100%;padding:8px 24px 0;display:flex;flex-direction:column;overflow-y:auto}
+.bottom{padding:12px 24px 28px;position:relative;z-index:2}
+
+/* logo with soft halo + gold ring */
+.emblem{position:relative;width:148px;height:148px;margin:18px auto 0}
+.emblem::before{content:'';position:absolute;inset:-26px;border-radius:50%;background:radial-gradient(circle,rgba(47,111,181,.18),transparent 68%)}
+.emblem .ring{position:absolute;inset:-8px;border-radius:50%;border:1.5px solid rgba(201,150,43,.55)}
+.emblem .ring.r2{inset:-18px;border-color:rgba(201,150,43,.22)}
+.emblem img{position:relative;width:100%;height:100%;border-radius:50%;box-shadow:0 0 0 4px #fff,0 16px 36px rgba(29,58,107,.22)}
+.feat{display:flex;align-items:center;gap:12px;padding:12px 14px}
+.feat .ic{width:38px;height:38px;border-radius:12px;background:var(--primary-tint);color:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.feat .ic .ms{font-size:20px}
+.feat b{display:block;font-size:14px;font-weight:600}
+.feat span{font-size:12.5px;color:var(--text-2)}
+
+/* language cards */
+.lang{display:flex;align-items:center;gap:14px;padding:16px;border-radius:18px;background:#fff;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;width:100%;text-align:left}
+.lang .flag{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:700;background:var(--primary-tint);color:var(--primary);flex-shrink:0}
+.lang b{display:block;font-size:16px}
+.lang small{font-size:12.5px;color:var(--text-2)}
+.lang .radio{margin-left:auto;width:24px;height:24px;border-radius:50%;border:2px solid #C3CAD4;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.lang.on{border-color:var(--primary);box-shadow:0 8px 20px rgba(29,58,107,.12)}
+.lang.on .radio{border-color:var(--primary);background:var(--primary)}
+.lang.on .radio::after{content:'';width:8px;height:8px;border-radius:50%;background:#fff}
+.lang.on .flag{background:linear-gradient(180deg,#3A63A6,var(--primary));color:#fff}
+
+/* notification preview */
+.phone-card{position:relative;margin:22px auto 0;width:100%;max-width:300px}
+.bell{width:84px;height:84px;margin:0 auto;border-radius:28px;display:flex;align-items:center;justify-content:center;color:#fff;position:relative;
+  background:linear-gradient(180deg,#3A63A6,var(--primary));box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 14px 30px rgba(29,58,107,.3);animation:ring 2.6s ease-in-out infinite}
+.bell .ms{font-size:40px}
+.bell::after{content:'';position:absolute;top:14px;right:16px;width:12px;height:12px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px #3A63A6}
+@keyframes ring{0%,70%,100%{transform:rotate(0)}75%{transform:rotate(-10deg)}80%{transform:rotate(9deg)}85%{transform:rotate(-6deg)}90%{transform:rotate(3deg)}}
+.toast{margin-top:-14px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;border-radius:18px}
+.toast .ic{width:34px;height:34px;border-radius:10px;background:#FBF3E2;color:#A67A1C;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.toast .ic .ms{font-size:18px}
+.check-row{display:flex;align-items:center;gap:10px;font-size:13.5px;padding:6px 0}
+.check-row .ms{font-size:18px;color:var(--gold)}
+.fade-in{animation:fi .5s both}
+@keyframes fi{from{opacity:0;transform:translateY(10px)}}
+</style>
+</head>
+<body>
+<div class="ob">
+  <div class="glow" style="position:fixed;height:600px"></div>
+  <div class="top">
+    <button class="icon-btn" id="back" style="visibility:hidden" aria-label="ተመለስ"><span class="ms">arrow_back</span></button>
+    <div class="dots"><i class="on"></i><i></i><i></i></div>
+    <button class="skip" id="skip" data-t="skip">ዝለል</button>
+  </div>
+
+  <div class="track-x" id="track">
+    <!-- 1 · welcome -->
+    <section class="step">
+      <div class="emblem"><span class="ring r2"></span><span class="ring"></span><img src="assets/logo-round.png" alt="ማኅበረ ቅዱሳን"></div>
+      <p class="m-0 mt-8 text-center text-[12.5px] font-semibold tracking-wide" style="color:var(--gold)" data-t="org">ማኅበረ ቅዱሳን · ግቢ ጉባኤያት አገልግሎት</p>
+      <h1 class="m-0 mt-2 text-center text-[26px] font-bold leading-tight" data-t="h1">እንኳን በደህና መጡ</h1>
+      <p class="m-0 mt-2 text-center text-[14px] text-[#5B6675] leading-relaxed px-2" data-t="p1">ሳምንታዊ የግቢ ጉባኤ ሪፖርትዎን በቀላሉ ያዘጋጁ፣ ይላኩ እና ይከታተሉ።</p>
+      <section class="glass mt-6 overflow-hidden" style="padding:2px 0">
+        <div class="feat"><span class="ic"><span class="ms">edit_note</span></span><div><b data-t="f1">ሪፖርት በደቂቃዎች</b><span data-t="f1s">በክፍል በክፍል የተዘጋጀ ቀላል ቅጽ</span></div></div>
+        <div class="divider mx-3.5"></div>
+        <div class="feat"><span class="ic"><span class="ms">cloud_off</span></span><div><b data-t="f2">ያለ ኢንተርኔት ይሙሉ</b><span data-t="f2s">ረቂቅ በስልክ ይቀመጣል፤ ለመላክ ኢንተርኔት ያስፈልጋል</span></div></div>
+        <div class="divider mx-3.5"></div>
+        <div class="feat"><span class="ic"><span class="ms">notifications_active</span></span><div><b data-t="f3">የሪፖርት ማስታወሻ</b><span data-t="f3s">የመጨረሻው ቀን እንዳያልፍዎ</span></div></div>
+      </section>
+    </section>
+
+    <!-- 2 · language -->
+    <section class="step">
+      <span class="w-14 h-14 rounded-[18px] flex items-center justify-center mt-6" style="background:var(--primary-tint);color:var(--primary)"><span class="ms" style="font-size:28px">translate</span></span>
+      <h1 class="m-0 mt-5 text-[24px] font-bold leading-tight" data-t="h2">ቋንቋ ይምረጡ</h1>
+      <p class="m-0 mt-2 text-[14px] text-[#5B6675] leading-relaxed" data-t="p2">መተግበሪያው በመረጡት ቋንቋ ይታያል። በኋላ በመገለጫ ውስጥ መቀየር ይችላሉ።</p>
+      <div class="flex flex-col gap-3 mt-7" id="langs">
+        <button class="lang on" data-l="am"><span class="flag">አ</span><span><b>አማርኛ</b><small>Amharic</small></span><span class="radio"></span></button>
+        <button class="lang" data-l="en"><span class="flag">En</span><span><b>English</b><small>እንግሊዝኛ</small></span><span class="radio"></span></button>
+      </div>
+      <p class="m-0 mt-5 text-[12.5px] text-[#8A94A3] flex items-center gap-1.5"><span class="ms" style="font-size:16px">add_circle</span><span data-t="soon">ሌሎች ቋንቋዎች በቅርቡ ይጨመራሉ</span></p>
+    </section>
+
+    <!-- 3 · notifications -->
+    <section class="step">
+      <div class="phone-card">
+        <div class="bell"><span class="ms fill">notifications</span></div>
+        <div class="glass toast mt-5">
+          <span class="ic"><span class="ms">alarm</span></span>
+          <div class="min-w-0"><b class="text-[13.5px] font-semibold" data-t="tt">የሪፖርት ማስታወሻ</b>
+            <p class="m-0 mt-0.5 text-[12.5px] text-[#5B6675] leading-snug" data-t="ts">የዚህ ሳምንት ሪፖርት የመጨረሻ ቀን ሰኞ ምሽት ነው።</p></div>
+          <span class="text-[11px] text-[#8A94A3] ml-auto shrink-0" data-t="now">አሁን</span>
+        </div>
+      </div>
+      <h1 class="m-0 mt-8 text-center text-[24px] font-bold leading-tight" data-t="h3">ማሳወቂያ ያብሩ</h1>
+      <p class="m-0 mt-2 text-center text-[14px] text-[#5B6675] leading-relaxed px-2" data-t="p3">የሪፖርት ጊዜ እንዳያመልጥዎ እና የኃላፊዎን ምላሽ ወዲያውኑ እንዲያውቁ።</p>
+      <div class="mt-5 mx-auto">
+        <div class="check-row"><span class="ms fill">check_circle</span><span data-t="c1">ከመጨረሻው ቀን በፊት ማስታወሻ</span></div>
+        <div class="check-row"><span class="ms fill">check_circle</span><span data-t="c2">ሪፖርት ሲጸድቅ ወይም ሲመለስ</span></div>
+        <div class="check-row"><span class="ms fill">check_circle</span><span data-t="c3">ከማስተባበሪያው የሚመጡ መልእክቶች</span></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="bottom">
+    <button class="btn btn-primary" id="next"><span data-t="next">ጀምር</span><span class="ms" style="font-size:19px">arrow_forward</span></button>
+    <button class="btn" id="later" style="background:transparent;color:var(--text-2);height:42px;margin-top:6px;visibility:hidden" data-t="later">በኋላ</button>
+  </div>
+</div>
+
+<script>
+const T = {
+  am: { skip:'ዝለል', org:'ማኅበረ ቅዱሳን · ግቢ ጉባኤያት አገልግሎት', h1:'እንኳን በደህና መጡ', p1:'ሳምንታዊ የግቢ ጉባኤ ሪፖርትዎን በቀላሉ ያዘጋጁ፣ ይላኩ እና ይከታተሉ።',
+        f1:'ሪፖርት በደቂቃዎች', f1s:'በክፍል በክፍል የተዘጋጀ ቀላል ቅጽ', f2:'ያለ ኢንተርኔት ይሙሉ', f2s:'ረቂቅ በስልክ ይቀመጣል፤ ለመላክ ኢንተርኔት ያስፈልጋል', f3:'የሪፖርት ማስታወሻ', f3s:'የመጨረሻው ቀን እንዳያልፍዎ',
+        h2:'ቋንቋ ይምረጡ', p2:'መተግበሪያው በመረጡት ቋንቋ ይታያል። በኋላ በመገለጫ ውስጥ መቀየር ይችላሉ።', soon:'ሌሎች ቋንቋዎች በቅርቡ ይጨመራሉ',
+        tt:'የሪፖርት ማስታወሻ', ts:'የዚህ ሳምንት ሪፖርት የመጨረሻ ቀን ሰኞ ምሽት ነው።', now:'አሁን', h3:'ማሳወቂያ ያብሩ',
+        p3:'የሪፖርት ጊዜ እንዳያመልጥዎ እና የኃላፊዎን ምላሽ ወዲያውኑ እንዲያውቁ።', c1:'ከመጨረሻው ቀን በፊት ማስታወሻ', c2:'ሪፖርት ሲጸድቅ ወይም ሲመለስ', c3:'ከማስተባበሪያው የሚመጡ መልእክቶች',
+        start:'ጀምር', next:'ቀጥል', allow:'ማሳወቂያ ፍቀድ', later:'በኋላ' },
+  en: { skip:'Skip', org:'Mahibere Kidusan · Gibi Gubae Service', h1:'Welcome', p1:'Prepare, send and track your weekly Gibi Gubae report — simply.',
+        f1:'Report in minutes', f1s:'A simple form, section by section', f2:'Fill in offline', f2s:'Draft saved on your phone; sending needs internet', f3:'Reminders', f3s:'Never miss the deadline',
+        h2:'Choose your language', p2:'The app will use this language. You can change it later in Profile.', soon:'More languages coming soon',
+        tt:'Report reminder', ts:'This week\'s report is due Monday night.', now:'now', h3:'Turn on notifications',
+        p3:'So you never miss the report window and see your leader\'s reply right away.', c1:'A reminder before the deadline', c2:'When a report is approved or returned', c3:'Messages from your coordinator',
+        start:'Get started', next:'Continue', allow:'Allow notifications', later:'Later' },
+};
+let step = 0, lang = 'am';
+const track = document.getElementById('track'), next = document.getElementById('next'), later = document.getElementById('later'),
+      back = document.getElementById('back'), skip = document.getElementById('skip'), dots = [...document.querySelectorAll('.dots i')];
+
+function texts() {
+  document.querySelectorAll('[data-t]').forEach(el => { const k = el.dataset.t; if (T[lang][k]) el.textContent = T[lang][k]; });
+  document.documentElement.lang = lang;
+  next.querySelector('span').textContent = step === 0 ? T[lang].start : step === 1 ? T[lang].next : T[lang].allow;
+}
+function show() {
+  track.style.transform = `translateX(-${step * 100}%)`;
+  dots.forEach((d, i) => d.classList.toggle('on', i === step));
+  back.style.visibility = step ? 'visible' : 'hidden';
+  skip.style.visibility = step < 2 ? 'visible' : 'hidden';
+  later.style.visibility = step === 2 ? 'visible' : 'hidden';
+  next.querySelector('.ms').textContent = step === 2 ? 'notifications_active' : 'arrow_forward';
+  texts();
+}
+next.onclick = () => { if (step < 2) { step++; show(); } else location.href = 'login.html'; };
+later.onclick = () => location.href = 'login.html';
+back.onclick = () => { if (step) { step--; show(); } };
+skip.onclick = () => { step = 2; show(); };
+document.getElementById('langs').onclick = e => {
+  const b = e.target.closest('.lang'); if (!b) return;
+  document.querySelectorAll('.lang').forEach(x => x.classList.toggle('on', x === b));
+  lang = b.dataset.l; texts();                                    // the screen switches language immediately
+};
+// swipe left / right
+let sx = null;
+track.addEventListener('touchstart', e => sx = e.touches[0].clientX, { passive: true });
+track.addEventListener('touchend', e => { if (sx === null) return; const dx = e.changedTouches[0].clientX - sx;
+  if (dx < -50 && step < 2) { step++; show(); } if (dx > 50 && step > 0) { step--; show(); } sx = null; });
+// open a given step from the overview: onboarding.html?step=2
+step = Math.min(2, +(new URLSearchParams(location.search).get('step') || 0));
+show();
+</script>
+</body>
+</html>
